@@ -103,4 +103,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize any other interactive elements
     console.log('Website Riga Jaya Malang telah dimuat');
+
+    // Scroll animation functionality
+    const sections = document.querySelectorAll('.section');
+    const productsSection = document.getElementById('products');
+    const titles = document.querySelectorAll('.highlight-title');
+
+    // Function to check if element is in viewport
+    function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75 &&
+            rect.bottom >= 0
+        );
+    }
+
+    // Function to handle scroll animations
+    function handleScrollAnimations() {
+        // Section fade-in animations
+        sections.forEach(section => {
+            if (isInViewport(section)) {
+                section.classList.add('visible');
+            }
+        });
+
+        // Special animation for products section
+        if (productsSection && isInViewport(productsSection)) {
+            productsSection.classList.add('animate');
+        }
+
+        // Title highlight animations
+        titles.forEach(title => {
+            if (isInViewport(title) && !title.classList.contains('animate')) {
+                // Small delay to ensure section is visible first
+                setTimeout(() => {
+                    title.classList.add('animate');
+                }, 300);
+            }
+        });
+    }
+
+    // Initial check in case sections are already in view
+    handleScrollAnimations();
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScrollAnimations);
 });

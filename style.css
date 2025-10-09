@@ -1,5 +1,38 @@
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* Import local fonts */
+@font-face {
+    font-family: 'Poppins';
+    src: url('font/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('font/Poppins-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('font/Poppins-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('font/Poppins-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Peace Sans';
+    src: url('font/Peace Sans Webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 /* Global Styles */
 * {
@@ -145,11 +178,14 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     padding: 15px 0;
     transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 header .container {
@@ -301,9 +337,14 @@ nav ul li a:hover::after {
     z-index: 1;
     width: 80%;
     max-width: 800px;
-    background: rgba(0, 0, 0, 0.5);
+    /* Glassmorphism effect */
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 40px;
     border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .hero-content h1 {
@@ -446,6 +487,40 @@ nav ul li a:hover::after {
 /* Advantages Section */
 .advantages {
     padding: 100px 0;
+    background: linear-gradient(135deg, #1b1e7a, #047fbd);
+    color: white;
+    position: relative;
+    overflow: visible;
+}
+
+.advantages-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.advantages-image {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.advantages-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.advantages-content {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+    z-index: 2;
 }
 
 .advantages-grid {
@@ -461,6 +536,9 @@ nav ul li a:hover::after {
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .advantage-item:hover {
@@ -585,7 +663,7 @@ nav ul li a:hover::after {
 }
 
 .contact-link.tokopedia {
-    background: linear-gradient(135deg, #FF5722, #E64A19);
+    background: linear-gradient(135deg, #128C7E, #25D366);
 }
 
 .contact-link.shopee {
@@ -741,6 +819,58 @@ footer {
     background-color: #128C7E;
 }
 
+/* Scroll animation for sections */
+.section {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#products {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+#products.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Brush highlight effect for section titles */
+.highlight-title {
+    position: relative;
+    display: inline-block;
+}
+
+.highlight-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 0;
+    height: 30%;
+    background: rgb(238, 255, 0);
+    transition: width 1s ease;
+    transform: translateY(-50%);
+    z-index: -1;
+}
+
+#advantages .highlight-title::after {
+    background: black;
+}
+
+.highlight-title.animate::after {
+    width: 100%;
+    left: 0;
+    right: auto;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero-content h1 {
@@ -789,5 +919,20 @@ footer {
     
     .catalog-detail {
         padding: 80px 0 30px;
+    }
+    
+    .advantages-wrapper {
+        flex-direction: column-reverse;
+    }
+    
+    .advantages-image {
+        order: 1;
+        margin-bottom: 30px;
+        min-width: 100%;
+    }
+    
+    .advantages-content {
+        order: 2;
+        min-width: 100%;
     }
 }
