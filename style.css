@@ -411,6 +411,51 @@ nav ul li a:hover::after {
     justify-content: center;
 }
 
+/* Ensure e-commerce buttons are small on desktop */
+.product-actions .tokopedia-btn.small, 
+.product-actions .shopee-btn.small,
+.product-actions .whatsapp-btn.small {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px 15px !important;
+    font-size: 14px !important;
+    border-radius: 20px !important;
+    margin: 5px !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 40px !important;
+    min-height: 30px !important;
+}
+
+/* Hide text for Tokopedia and Shopee buttons on desktop */
+.product-actions .tokopedia-btn.small span,
+.product-actions .shopee-btn.small span {
+    display: none !important;
+}
+
+/* Show icon for all buttons on desktop */
+.product-actions .tokopedia-btn.small img,
+.product-actions .shopee-btn.small img,
+.product-actions .whatsapp-btn.small img {
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Show WhatsApp text on desktop */
+.product-actions .whatsapp-btn.small span {
+    display: inline-block !important;
+    margin-left: 5px !important;
+}
+
+/* Horizontal layout for buttons on desktop */
+.product-actions {
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 10px !important;
+}
+
 /* Catalog Detail Section */
 .catalog-detail {
     padding: 100px 0 50px;
@@ -479,6 +524,51 @@ nav ul li a:hover::after {
     justify-content: center;
 }
 
+/* Ensure e-commerce buttons are small on desktop in catalog detail */
+.catalog-detail .product-actions .tokopedia-btn.small, 
+.catalog-detail .product-actions .shopee-btn.small,
+.catalog-detail .product-actions .whatsapp-btn.small {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px 15px !important;
+    font-size: 14px !important;
+    border-radius: 20px !important;
+    margin: 5px !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 40px !important;
+    min-height: 30px !important;
+}
+
+/* Hide text for Tokopedia and Shopee buttons in catalog detail */
+.catalog-detail .product-actions .tokopedia-btn.small span,
+.catalog-detail .product-actions .shopee-btn.small span {
+    display: none !important;
+}
+
+/* Show icon for all buttons in catalog detail */
+.catalog-detail .product-actions .tokopedia-btn.small img,
+.catalog-detail .product-actions .shopee-btn.small img,
+.catalog-detail .product-actions .whatsapp-btn.small img {
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Show WhatsApp text in catalog detail */
+.catalog-detail .product-actions .whatsapp-btn.small span {
+    display: inline-block !important;
+    margin-left: 5px !important;
+}
+
+/* Horizontal layout for buttons in catalog detail on desktop */
+.catalog-detail .product-actions {
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 10px !important;
+}
+
 .back-to-products {
     text-align: center;
     margin-top: 30px;
@@ -491,36 +581,6 @@ nav ul li a:hover::after {
     color: white;
     position: relative;
     overflow: visible;
-}
-
-.advantages-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-.advantages-image {
-    flex: 1;
-    min-width: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-}
-
-.advantages-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.advantages-content {
-    flex: 1;
-    min-width: 300px;
-    position: relative;
-    z-index: 2;
 }
 
 .advantages-grid {
@@ -556,13 +616,40 @@ nav ul li a:hover::after {
     margin-bottom: 15px;
 }
 
+/* MODIFIED AND NEW STYLES FOR PRICE-INFO */
 .price-info {
-    background: linear-gradient(135deg, #25D366, #128C7E);
+    background: linear-gradient(135deg, #02b152, #128C7E);
     color: white;
-    padding: 40px;
+    padding: 20px 40px 20px 80px; /* Adjust padding to make space for the overlapping image */
     border-radius: 10px;
-    text-align: center;
+    position: relative;
 }
+
+.price-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-align: left;
+}
+
+.price-info-image {
+    flex-shrink: 0;
+    /* Position image to overlap the container */
+    position: absolute;
+    left: -40px; /* Adjust this value to control the overlap */
+    bottom: -20px; /* Adjust this value to control vertical position */
+}
+
+.price-info-image img {
+    max-width: 320px; /* Control the size of the image */
+    height: auto;
+}
+
+.price-info-content {
+    flex-grow: 1;
+    margin-left: 220px; /* Create space for the image */
+}
+/* END OF MODIFIED STYLES */
 
 .price-info h3 {
     font-size: 2rem;
@@ -573,8 +660,8 @@ nav ul li a:hover::after {
     font-size: 1.1rem;
     margin-bottom: 30px;
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 /* Testimonials Section */
@@ -616,6 +703,69 @@ nav ul li a:hover::after {
 /* Contact Section */
 .contact {
     padding: 100px 0;
+}
+
+:root {
+    /* Customizable vertical alignment for contact model */
+    --contact-model-align: center; /* Options: flex-start, center, flex-end */
+    --contact-model-margin-top: auto; /* Adjust to move model up or down */
+    --contact-model-margin-bottom: auto; /* Adjust to move model up or down */
+}
+
+.contact-wrapper {
+    display: flex;
+    align-items: center; /* Center model and content vertically */
+    justify-content: center;
+    gap: 30px;
+    /* Allow for custom vertical alignment */
+    min-height: 500px; /* Minimum height to enable vertical positioning */
+    /* Customizable height */
+    height: auto; /* Change to fixed height if needed */
+}
+
+.contact-model {
+    /* Set max width and align to the bottom of its container */
+    max-width: 400px;
+    /* Customizable vertical alignment */
+    align-self: var(--contact-model-align, center);
+    margin-top: var(--contact-model-margin-top, auto);
+    margin-bottom: var(--contact-model-margin-bottom, auto);
+}
+
+.contact-model img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.contact-content-right {
+    flex-grow: 1;
+    max-width: 800px; /* Limit content width for better visual */
+}
+
+/* Override existing styles to align section title to the left inside the new wrapper */
+.contact-content-right .section-title {
+    text-align: left;
+    margin-left: 0;
+}
+
+.contact-content-right .section-title::after {
+    left: 0;
+    transform: none;
+}
+
+.contact-content-right .social-media-info {
+    text-align: left;
+}
+
+/* Adjust the note box style to match the image's appearance */
+.contact-content-right .note {
+    background-color: #fffde7; /* Warna kuning muda pucat */
+    padding: 15px 20px;
+    border-left: none; /* Hapus border kiri */
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Tambahkan sedikit bayangan */
 }
 
 .social-media-info {
@@ -757,8 +907,8 @@ footer {
 }
 
 .social-icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30x;
     margin: 0 auto 15px; /* Tambahkan 'auto' untuk center horizontal */
     display: block;
     /* Ensure SVG scales properly */
@@ -768,8 +918,8 @@ footer {
 }
 
 .social-icon-small {
-    width: 24px;
-    height: 24px;
+    width: 17px;
+    height: 17px;
     display: inline-block;
     /* Ensure SVG scales properly */
     object-fit: contain;
@@ -845,30 +995,92 @@ footer {
 /* Brush highlight effect for section titles */
 .highlight-title {
     position: relative;
-    display: inline-block;
+    /* 1. Tetap inline agar hanya selebar teks */
+    display: inline; 
+    /* Tambahkan sedikit padding agar highlight tidak mepet teks */
+    padding: 0.1em 0.3em; 
+
+    /* 2. KUNCI FIX MULTI-BARIS: Mengizinkan background/shadow diulang pada setiap baris yang terbungkus */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    
+    /* 3. Animasi Highlight dengan Background Gradient */
+    background-image: linear-gradient(to right, rgb(238, 255, 0), rgb(238, 255, 0));
+    background-repeat: no-repeat;
+    /* Posisi di tengah (50%) dan di bagian bawah (100%) dari teks per baris */
+    background-position: 0% 50%; 
+    /* Mulai dari lebar 0%, tinggi 50% dari tinggi baris */
+    background-size: 0% 50%; 
+    transition: background-size 1s ease;
 }
 
+/* 4. Hapus pseudo-element ::after yang menyebabkan bug single-line dan konflik */
 .highlight-title::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 0;
+    content: none;
+    /* Tambahan agar properti lama benar-benar ditimpa */
+    position: static; 
     width: 0;
-    height: 30%;
-    background: rgb(238, 255, 0);
-    transition: width 1s ease;
-    transform: translateY(-50%);
-    z-index: -1;
+    height: 0;
+}
+
+/* Animasi untuk background-size: membuat highlight penuh */
+.highlight-title.animate {
+    background-size: 100% 50%; /* Lebar penuh saat teranimasi */
+}
+
+#advantages .highlight-title {
+    background-image: linear-gradient(to right, black, black);
 }
 
 #advantages .highlight-title::after {
-    background: black;
+    content: none;
+    position: static;
+    width: 0;
+    height: 0;
 }
 
 .highlight-title.animate::after {
     width: 100%;
     left: 0;
     right: auto;
+}
+
+/* Responsive adjustment for contact section */
+@media (max-width: 992px) {
+    /* Di layar yang lebih kecil, susun model dan konten secara vertikal */
+    .contact-wrapper {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .contact-model {
+        max-width: 290px; /* Perkecil sedikit di mobile/tablet */
+        order: 1; /* Pindah gambar ke atas */
+        align-self: center;
+        /* Customizable vertical alignment on mobile */
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+    .contact-content-right {
+        order: 2; /* Pindah konten ke bawah */
+        max-width: 100%;
+    }
+    
+    /* Kembalikan judul dan info ke tengah di mobile */
+    .contact-content-right .section-title {
+        text-align: center;
+    }
+    
+    .contact-content-right .section-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .contact-content-right .social-media-info {
+        text-align: center;
+    }
 }
 
 /* Responsive Design */
@@ -917,22 +1129,114 @@ footer {
         margin: 5px 0;
     }
     
+    /* Styles for all buttons - small format on both desktop and mobile */
+    .product-actions .tokopedia-btn, 
+    .product-actions .shopee-btn,
+    .product-actions .whatsapp-btn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 15px !important;
+        font-size: 14px !important;
+        border-radius: 20px !important;
+        margin: 5px;
+        width: auto;
+        height: auto;
+    }
+
+    /* Ensure Tokopedia and Shopee buttons are small on desktop too */
+    .product-actions .tokopedia-btn.small, 
+    .product-actions .shopee-btn.small {
+        padding: 8px 15px !important;
+        font-size: 14px !important;
+        border-radius: 20px !important;
+        min-width: 40px !important;
+        min-height: 30px !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    .product-actions .tokopedia-btn span, 
+    .product-actions .shopee-btn span {
+        display: none !important;
+    }
+
+    .product-actions .tokopedia-btn img, 
+    .product-actions .shopee-btn img,
+    .product-actions .whatsapp-btn img {
+        display: block;
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    /* Show WhatsApp text */
+    .product-actions .whatsapp-btn span {
+        display: inline-block !important;
+        margin-left: 5px;
+    }
+    
+    /* Ensure WhatsApp button is also small on desktop */
+    .product-actions .whatsapp-btn.small {
+        padding: 8px 15px !important;
+        font-size: 14px !important;
+        border-radius: 20px !important;
+        min-width: 40px !important;
+        min-height: 30px !important;
+        width: auto !important;
+        height: auto !important;
+    }
+    
+    /* Mobile styles for product actions */
+    .product-actions {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    /* Catalog buttons keep their original long format */
+    .product-actions .catalog-btn.small {
+        padding: 8px 15px;
+        font-size: 14px;
+        border-radius: 20px;
+        margin: 5px;
+        width: auto;
+        height: auto;
+        display: inline-block;
+    }
+    
     .catalog-detail {
         padding: 80px 0 30px;
     }
     
-    .advantages-wrapper {
-        flex-direction: column-reverse;
+    /* MODIFIED RESPONSIVE STYLES FOR PRICE-INFO */
+    .price-info {
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    .price-info-wrapper {
+        flex-direction: column;
+        text-align: center;
+        gap: 0;
+    }
+
+    .price-info-image {
+        position: static; /* Reset position for stacking */
+        text-align: center;
+        margin-bottom: 20px;
     }
     
-    .advantages-image {
-        order: 1;
-        margin-bottom: 30px;
-        min-width: 100%;
+    .price-info-image img {
+        max-width: 80%; /* Adjust size for mobile */
+    }
+
+    .price-info-content {
+        margin-left: 0; /* Reset margin */
     }
     
-    .advantages-content {
-        order: 2;
-        min-width: 100%;
+    /* Hide carousel controls on mobile */
+    .carousel-controls {
+        display: none !important;
     }
+    
 }
