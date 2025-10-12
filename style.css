@@ -41,6 +41,11 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Account for fixed header height */
+}
+
 /* SVG specific styles */
 img[src$=".svg"] {
     /* Ensure SVG images scale properly */
@@ -55,6 +60,7 @@ body {
     line-height: 1.6;
     color: #333;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 .container {
@@ -418,7 +424,7 @@ nav ul li a:hover::after {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 8px 15px !important;
+    padding: 3px 15px !important;
     font-size: 14px !important;
     border-radius: 20px !important;
     margin: 5px !important;
@@ -518,7 +524,7 @@ nav ul li a:hover::after {
 }
 
 .catalog-detail .product-actions {
-    padding: 0 20px 20px;
+    padding: 0 5px 5px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -566,7 +572,7 @@ nav ul li a:hover::after {
 .catalog-detail .product-actions {
     flex-direction: row !important;
     justify-content: center !important;
-    gap: 10px !important;
+    gap: 2px !important;
 }
 
 .back-to-products {
@@ -682,6 +688,21 @@ nav ul li a:hover::after {
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     text-align: center;
+}
+
+.customer-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px;
+    border: 3px solid #25D366;
+}
+
+.customer-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .rating {
@@ -818,6 +839,10 @@ nav ul li a:hover::after {
 
 .contact-link.shopee {
     background: linear-gradient(135deg, #EE4D2D, #D73D26);
+}
+
+.contact-link.email {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
 .contact-link i {
@@ -1097,6 +1122,28 @@ footer {
         font-size: 2rem;
     }
     
+    /* Hide header on mobile */
+    header {
+        display: none;
+    }
+    
+    /* Adjust hero section margin when header is hidden */
+    .hero {
+        margin-top: 0;
+    }
+    
+    /* Make hero section full-width on mobile */
+    .hero .container {
+        padding: 0;
+        width: 100%;
+        max-width: 1200px
+    }
+    
+    .hero .carousel-container {
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+    }
+    
     nav ul {
         display: none;
     }
@@ -1126,7 +1173,7 @@ footer {
     
     .product-actions .btn {
         width: 100%;
-        margin: 5px 0;
+        margin: 2px 0;
     }
     
     /* Styles for all buttons - small format on both desktop and mobile */
