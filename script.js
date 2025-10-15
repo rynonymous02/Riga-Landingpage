@@ -9,16 +9,64 @@ document.addEventListener('DOMContentLoaded', function() {
     let intervalId;
 
     // Function to show a specific slide
+    // Start with no slide active so the first showSlide triggers animation
+    let initial = true;
     function showSlide(index) {
-        // Remove active class from all slides and dots
-        slides.forEach(slide => slide.classList.remove('active'));
-        dots.forEach(dot => dot.classList.remove('active'));
-        
-        // Add active class to current slide and dot
+        // If requested slide is already active and not initial call, do nothing.
+        if (!initial && index === currentSlide) return;
+
+        // Remove active class from previous slide and dot only (if any)
+        if (!initial) {
+            const prevSlide = slides[currentSlide];
+            const prevImg = prevSlide.querySelector('img');
+            // Capture current computed transform so the image doesn't snap back
+            // to its original state when we remove the .active class.
+            if (prevImg) {
+                const cs = window.getComputedStyle(prevImg);
+                const currentTransform = cs.transform || cs.webkitTransform || 'none';
+                const currentTransformOrigin = cs.transformOrigin || cs.webkitTransformOrigin || '';
+                // Apply the computed transform and transform-origin inline to preserve visual state
+                prevImg.style.transform = currentTransform;
+                prevImg.style.transformOrigin = currentTransformOrigin;
+                // Also ensure transitions on transform don't override the preserved state
+                prevImg.style.transition = 'none';
+            }
+
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+
+            // After the opacity transition (1s), remove the inline transform and transition
+            // so the DOM doesn't keep stale inline styles. Use a small buffer.
+            (function(img) {
+                setTimeout(() => {
+                    if (img) {
+                        // Only clear if it still has the inline transform/transformOrigin we applied
+                        img.style.transform = '';
+                        img.style.transformOrigin = '';
+                        img.style.transition = '';
+                    }
+                }, 1100);
+            })(prevImg);
+        }
+
+        // Restart Ken Burns animation on the incoming slide's image so it runs
+        // each time the slide becomes active.
+        const img = slides[index].querySelector('img');
+        if (img) {
+            // Remove inline animation to reset, force reflow, then let CSS rule run
+            img.style.animation = 'none';
+            // Force reflow
+            // eslint-disable-next-line no-unused-expressions
+            img.offsetWidth;
+            img.style.animation = '';
+        }
+
+        // Add active class to new slide and dot
         slides[index].classList.add('active');
         dots[index].classList.add('active');
-        
+
         currentSlide = index;
+        initial = false;
     }
 
     // Function to go to next slide
@@ -69,7 +117,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Start the slideshow
+    // Initialize first slide so its Ken Burns animation starts, then start slideshow
+    currentSlide = -1; // so showSlide(0) is treated as a new activation
+    showSlide(0);
     startSlideShow();
 
     // Header scroll effect
@@ -134,6 +184,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize any other interactive elements
     console.log('Website Riga Jaya Malang telah dimuat');
+
+    // Mobile menu toggle
+    const mobileToggle = document.querySelector('.mobile-menu-toggle');
+    const navEl = document.querySelector('nav');
+    if (mobileToggle && navEl) {
+        mobileToggle.addEventListener('click', function(e) {
+            const isOpen = navEl.classList.toggle('open');
+            mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        // Close nav when clicking a link
+        navEl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+            navEl.classList.remove('open');
+            mobileToggle.setAttribute('aria-expanded', 'false');
+        }));
+
+        // Close on outside click
+        document.addEventListener('click', (ev) => {
+            if (!navEl.contains(ev.target) && !mobileToggle.contains(ev.target)) {
+                navEl.classList.remove('open');
+                mobileToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
 
     // Scroll animation functionality
     const sections = document.querySelectorAll('.section');

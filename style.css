@@ -280,6 +280,38 @@ nav ul li a:hover::after {
     object-fit: cover;
 }
 
+/* Ken Burns effect: move up (top) with ease-out over 10s.
+   Use a single iteration and keep final state so the image doesn't reset
+   when returning to a slide. The animation runs independent of the
+   slide's opacity so toggling .active won't restart it. */
+@keyframes kenburns-top {
+    0% {
+        transform: scale(1) translateY(0);
+        transform-origin: center center;
+    }
+    100% {
+        transform: scale(1.12) translateY(-8%);
+        transform-origin: center top;
+    }
+}
+
+.carousel-slide img {
+    /* Ensure smooth GPU-accelerated transform */
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Trigger Ken Burns when slide is active so it runs each time the slide appears.
+   Duration is 5s per slide as requested. */
+.carousel-slide.active img {
+    animation-name: kenburns-top;
+    animation-duration: 10s; /* 5 detik per slide */
+    animation-timing-function: ease-out; /* easeOut */
+    animation-iteration-count: 1; /* run once per activation */
+    animation-fill-mode: forwards; /* keep final position until next activation */
+}
+
 .carousel-controls {
     position: absolute;
     top: 50%;
@@ -357,6 +389,30 @@ nav ul li a:hover::after {
     font-size: 3rem;
     margin-bottom: 20px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Tracking-in text animation (tracking-in) */
+@keyframes tracking-in {
+    0% {
+        letter-spacing: 1em;
+        opacity: 0;
+        transform: translateZ(0);
+    }
+    100% {
+        letter-spacing: 0.05em;
+        opacity: 1;
+        transform: translateZ(0);
+    }
+}
+
+.tracking-in {
+    display: inline-block;
+    animation: tracking-in 0.7s cubic-bezier(.215,.61,.355,1) both; /* easeOutCubic approx */
+}
+
+/* Hide mobile menu toggle by default (desktop) */
+.mobile-menu-toggle {
+    display: none;
 }
 
 .hero-content p {
@@ -1124,7 +1180,63 @@ footer {
     
     /* Hide header on mobile */
     header {
-        display: none;
+        /* keep header visible on mobile but use compact layout */
+        display: block;
+    }
+
+    /* Mobile header tweaks */
+    header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .mobile-menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        border: none;
+        background: rgba(0,0,0,0.05);
+        cursor: pointer;
+        z-index: 1100;
+    }
+
+    nav {
+        position: absolute;
+        top: 100%; /* place directly below header regardless of its height */
+        left: 0;
+        right: 0;
+        background: white;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        transform-origin: top center;
+        transform: scaleY(0);
+        transition: transform 260ms ease;
+        z-index: 1050;
+        overflow: hidden;
+    }
+
+    nav.open {
+        transform: scaleY(1);
+    }
+
+    nav ul {
+        display: block;
+        padding: 10px 20px;
+    }
+
+    nav ul li {
+        margin: 8px 0;
+    }
+
+    nav ul li a {
+        display: block;
+        padding: 12px 8px;
+        font-size: 1rem;
+        color: #333;
     }
     
     /* Adjust hero section margin when header is hidden */
@@ -1144,9 +1256,7 @@ footer {
         margin-left: calc(-50vw + 50%);
     }
     
-    nav ul {
-        display: none;
-    }
+    /* ensure nav list is visible when nav.open is applied (see rules above) */
     
     .hero-content {
         width: 95%;
