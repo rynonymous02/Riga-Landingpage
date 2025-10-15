@@ -1,1407 +1,255 @@
-/* Import local fonts */
-@font-face {
-    font-family: 'Poppins';
-    src: url('font/Poppins-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+// Carousel functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    let currentSlide = 0;
+    const slideInterval = 5000; // 5 detik
+    let intervalId;
 
-@font-face {
-    font-family: 'Poppins';
-    src: url('font/Poppins-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
+    // Function to show a specific slide
+    // Start with no slide active so the first showSlide triggers animation
+    let initial = true;
+    function showSlide(index) {
+        // If requested slide is already active and not initial call, do nothing.
+        if (!initial && index === currentSlide) return;
 
-@font-face {
-    font-family: 'Poppins';
-    src: url('font/Poppins-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
+        // Remove active class from previous slide and dot only (if any)
+        if (!initial) {
+            const prevSlide = slides[currentSlide];
+            const prevImg = prevSlide.querySelector('img');
+            // Capture current computed transform so the image doesn't snap back
+            // to its original state when we remove the .active class.
+            if (prevImg) {
+                const cs = window.getComputedStyle(prevImg);
+                const currentTransform = cs.transform || cs.webkitTransform || 'none';
+                const currentTransformOrigin = cs.transformOrigin || cs.webkitTransformOrigin || '';
+                // Apply the computed transform and transform-origin inline to preserve visual state
+                prevImg.style.transform = currentTransform;
+                prevImg.style.transformOrigin = currentTransformOrigin;
+                // Also ensure transitions on transform don't override the preserved state
+                prevImg.style.transition = 'none';
+            }
 
-@font-face {
-    font-family: 'Poppins';
-    src: url('font/Poppins-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
 
-@font-face {
-    font-family: 'Peace Sans';
-    src: url('font/Peace Sans Webfont.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+            // After the opacity transition (1s), remove the inline transform and transition
+            // so the DOM doesn't keep stale inline styles. Use a small buffer.
+            (function(img) {
+                setTimeout(() => {
+                    if (img) {
+                        // Only clear if it still has the inline transform/transformOrigin we applied
+                        img.style.transform = '';
+                        img.style.transformOrigin = '';
+                        img.style.transition = '';
+                    }
+                }, 1100);
+            })(prevImg);
+        }
 
-/* Global Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        // Restart Ken Burns animation on the incoming slide's image so it runs
+        // each time the slide becomes active.
+        const img = slides[index].querySelector('img');
+        if (img) {
+            // Remove inline animation to reset, force reflow, then let CSS rule run
+            img.style.animation = 'none';
+            // Force reflow
+            // eslint-disable-next-line no-unused-expressions
+            img.offsetWidth;
+            img.style.animation = '';
+        }
 
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px; /* Account for fixed header height */
-}
+        // Add active class to new slide and dot
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
 
-/* SVG specific styles */
-img[src$=".svg"] {
-    /* Ensure SVG images scale properly */
-    max-width: 100%;
-    height: auto;
-    /* Fix for IE11 */
-    pointer-events: none;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: #333;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-}
-
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-.btn {
-    display: inline-block;
-    padding: 12px 25px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.btn.small {
-    padding: 8px 15px;
-    font-size: 14px;
-    border-radius: 20px;
-    margin: 5px;
-}
-
-.whatsapp-btn {
-    background-color: #25D366;
-    color: white;
-}
-
-.whatsapp-btn:hover {
-    background-color: #128C7E;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
-}
-
-.tokopedia-btn {
-    background-color: #FF5722;
-    color: white;
-}
-
-.tokopedia-btn:hover {
-    background-color: #E64A19;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-}
-
-.shopee-btn {
-    background-color: #EE4D2D;
-    color: white;
-}
-
-.shopee-btn:hover {
-    background-color: #D73D26;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(238, 77, 45, 0.4);
-}
-
-.catalog-btn {
-    background-color: #3498db;
-    color: white;
-}
-
-.catalog-btn:hover {
-    background-color: #2980b9;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-}
-
-.banner-secondary-btn {
-    background-color: transparent;
-    color: #ffffff;
-    border: 2px solid #ffffff;
-    margin-left: 15px;
-}
-
-.banner-secondary-btn:hover {
-    background-color: #333;
-    color: rgb(255, 255, 255);
-    transform: translateY(-3px);
-}
-
-.secondary-btn {
-    background-color: transparent;
-    color: #000000;
-    border: 2px solid #000000;
-    margin-left: 15px;
-}
-
-.secondary-btn:hover {
-    background-color: #333;
-    color: white;
-    transform: translateY(-3px);
-}
-
-.section-title {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 50px;
-    position: relative;
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    background: #25D366;
-    border-radius: 2px;
-}
-
-/* Header Styles */
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    /* default: very subtle transparent glass so content shows through */
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    z-index: 1000;
-    padding: 12px 0;
-    transition: background 260ms ease, transform 260ms ease, box-shadow 260ms ease;
-}
-
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Make header slightly more opaque when scrolled for readability */
-header.scrolled {
-    /* on scroll: strong white gradient for readability */
-    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.80));
-    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
-}
-
-.logo img {
-    height: 50px;
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-}
-
-nav ul li {
-    margin-left: 30px;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s ease;
-    position: relative;
-}
-
-nav ul li a:hover {
-    color: #25D366;
-}
-
-nav ul li a::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #25D366;
-    transition: width 0.3s ease;
-}
-
-nav ul li a:hover::after {
-    width: 100%;
-}
-
-/* Hero Section with Carousel */
-.hero {
-    margin-top: 80px;
-    position: relative;
-    height: 80vh;
-    overflow: hidden;
-}
-
-.carousel-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.carousel {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.carousel-slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.carousel-slide.active {
-    opacity: 1;
-}
-
-.carousel-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Ken Burns effect: move up (top) with ease-out over 10s.
-   Use a single iteration and keep final state so the image doesn't reset
-   when returning to a slide. The animation runs independent of the
-   slide's opacity so toggling .active won't restart it. */
-@keyframes kenburns-top {
-    0% {
-        transform: scale(1) translateY(0);
-        transform-origin: center center;
+        currentSlide = index;
+        initial = false;
     }
-    100% {
-        transform: scale(1.12) translateY(-8%);
-        transform-origin: center top;
+
+    // Function to go to next slide
+    function nextSlide() {
+        let nextIndex = (currentSlide + 1) % slides.length;
+        showSlide(nextIndex);
     }
-}
 
-.carousel-slide img {
-    /* Ensure smooth GPU-accelerated transform */
-    will-change: transform;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
-
-/* Trigger Ken Burns when slide is active so it runs each time the slide appears.
-   Duration is 5s per slide as requested. */
-.carousel-slide.active img {
-    animation-name: kenburns-top;
-    animation-duration: 10s; /* 5 detik per slide */
-    animation-timing-function: ease-out; /* easeOut */
-    animation-iteration-count: 1; /* run once per activation */
-    animation-fill-mode: forwards; /* keep final position until next activation */
-}
-
-.carousel-controls {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
-    padding: 0 20px;
-    z-index: 2;
-}
-
-.prev-btn, .next-btn {
-    background-color: rgba(255, 255, 255, 0.7);
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    transition: all 0.3s ease;
-}
-
-.prev-btn:hover, .next-btn:hover {
-    background-color: white;
-    transform: scale(1.1);
-}
-
-.carousel-dots {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    z-index: 2;
-}
-
-.dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    margin: 0 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.dot.active {
-    background-color: white;
-}
-
-.hero-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
-    z-index: 1;
-    width: 80%;
-    max-width: 800px;
-    /* Glassmorphism effect */
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 40px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Tracking-in text animation (tracking-in) */
-@keyframes tracking-in {
-    0% {
-        letter-spacing: 1em;
-        opacity: 0;
-        transform: translateZ(0);
+    // Function to go to previous slide
+    function prevSlide() {
+        let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prevIndex);
     }
-    100% {
-        letter-spacing: 0.05em;
-        opacity: 1;
-        transform: translateZ(0);
+
+    // Function to start the automatic slideshow
+    function startSlideShow() {
+        intervalId = setInterval(nextSlide, slideInterval);
     }
-}
 
-.tracking-in {
-    display: inline-block;
-    animation: tracking-in 0.7s cubic-bezier(.215,.61,.355,1) both; /* easeOutCubic approx */
-}
-
-/* Hide mobile menu toggle by default (desktop) */
-.mobile-menu-toggle {
-    display: none;
-}
-
-.hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-/* Products Section */
-.products {
-    padding: 100px 0;
-    background-color: #f9f9f9;
-}
-
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-}
-
-.product-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-}
-
-.product-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.product-card h3 {
-    padding: 20px 20px 0;
-    font-size: 1.5rem;
-}
-
-.product-card p {
-    padding: 10px 20px;
-    color: #666;
-    flex-grow: 1;
-}
-
-.product-actions {
-    padding: 0 20px 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* Ensure e-commerce buttons are small on desktop */
-.product-actions .tokopedia-btn.small, 
-.product-actions .shopee-btn.small,
-.product-actions .whatsapp-btn.small {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 3px 15px !important;
-    font-size: 14px !important;
-    border-radius: 20px !important;
-    margin: 5px !important;
-    width: auto !important;
-    height: auto !important;
-    min-width: 40px !important;
-    min-height: 30px !important;
-}
-
-/* Hide text for Tokopedia and Shopee buttons on desktop */
-.product-actions .tokopedia-btn.small span,
-.product-actions .shopee-btn.small span {
-    display: none !important;
-}
-
-/* Show icon for all buttons on desktop */
-.product-actions .tokopedia-btn.small img,
-.product-actions .shopee-btn.small img,
-.product-actions .whatsapp-btn.small img {
-    display: block !important;
-    width: 16px !important;
-    height: 16px !important;
-}
-
-/* Show WhatsApp text on desktop */
-.product-actions .whatsapp-btn.small span {
-    display: inline-block !important;
-    margin-left: 5px !important;
-}
-
-/* Horizontal layout for buttons on desktop */
-.product-actions {
-    flex-direction: row !important;
-    justify-content: center !important;
-    gap: 10px !important;
-}
-
-/* Catalog Detail Section */
-.catalog-detail {
-    padding: 100px 0 50px;
-    background-color: #f9f9f9;
-}
-
-.catalog-description {
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 1.1rem;
-    color: #666;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.catalog-detail .product-grid {
-    margin-bottom: 40px;
-}
-
-.catalog-detail .product-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.catalog-detail .product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-}
-
-.catalog-detail .product-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.catalog-detail .product-card h3 {
-    padding: 20px 20px 0;
-    font-size: 1.3rem;
-}
-
-.catalog-detail .product-card p {
-    padding: 10px 20px;
-    color: #666;
-    flex-grow: 1;
-}
-
-.price {
-    padding: 0 20px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #25D366;
-    text-align: center;
-}
-
-.catalog-detail .product-actions {
-    padding: 0 5px 5px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* Ensure e-commerce buttons are small on desktop in catalog detail */
-.catalog-detail .product-actions .tokopedia-btn.small, 
-.catalog-detail .product-actions .shopee-btn.small,
-.catalog-detail .product-actions .whatsapp-btn.small {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 8px 15px !important;
-    font-size: 14px !important;
-    border-radius: 20px !important;
-    margin: 5px !important;
-    width: auto !important;
-    height: auto !important;
-    min-width: 40px !important;
-    min-height: 30px !important;
-}
-
-/* Hide text for Tokopedia and Shopee buttons in catalog detail */
-.catalog-detail .product-actions .tokopedia-btn.small span,
-.catalog-detail .product-actions .shopee-btn.small span {
-    display: none !important;
-}
-
-/* Show icon for all buttons in catalog detail */
-.catalog-detail .product-actions .tokopedia-btn.small img,
-.catalog-detail .product-actions .shopee-btn.small img,
-.catalog-detail .product-actions .whatsapp-btn.small img {
-    display: block !important;
-    width: 16px !important;
-    height: 16px !important;
-}
-
-/* Show WhatsApp text in catalog detail */
-.catalog-detail .product-actions .whatsapp-btn.small span {
-    display: inline-block !important;
-    margin-left: 5px !important;
-}
-
-/* Horizontal layout for buttons in catalog detail on desktop */
-.catalog-detail .product-actions {
-    flex-direction: row !important;
-    justify-content: center !important;
-    gap: 2px !important;
-}
-
-.back-to-products {
-    text-align: center;
-    margin-top: 30px;
-}
-
-/* Advantages Section */
-.advantages {
-    padding: 100px 0;
-    background: linear-gradient(135deg, #1b1e7a, #047fbd);
-    color: white;
-    position: relative;
-    overflow: visible;
-}
-
-.advantages-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-bottom: 50px;
-}
-
-.advantage-item {
-    text-align: center;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.advantage-item:hover {
-    transform: translateY(-10px);
-}
-
-.icon {
-    font-size: 3rem;
-    color: #25D366;
-    margin-bottom: 20px;
-}
-
-.advantage-item h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-}
-
-/* MODIFIED AND NEW STYLES FOR PRICE-INFO */
-.price-info {
-    background: linear-gradient(135deg, #02b152, #128C7E);
-    color: white;
-    padding: 20px 40px 20px 80px; /* Adjust padding to make space for the overlapping image */
-    border-radius: 10px;
-    position: relative;
-}
-
-.price-info-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    text-align: left;
-}
-
-.price-info-image {
-    flex-shrink: 0;
-    /* Position image to overlap the container */
-    position: absolute;
-    left: -40px; /* Adjust this value to control the overlap */
-    bottom: -20px; /* Adjust this value to control vertical position */
-}
-
-.price-info-image img {
-    max-width: 320px; /* Control the size of the image */
-    height: auto;
-}
-
-.price-info-content {
-    flex-grow: 1;
-    margin-left: 220px; /* Create space for the image */
-}
-/* END OF MODIFIED STYLES */
-
-.price-info h3 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-}
-
-.price-info p {
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-    max-width: 800px;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-/* Testimonials Section */
-.testimonials {
-    padding: 100px 0;
-    background-color: #f9f9f9;
-}
-
-.testimonial-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-}
-
-.testimonial-card {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    text-align: center;
-}
-
-.customer-photo {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 auto 20px;
-    border: 3px solid #25D366;
-}
-
-.customer-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.rating {
-    color: #FFD700;
-    margin-bottom: 20px;
-}
-
-.testimonial-card p {
-    font-style: italic;
-    margin-bottom: 20px;
-    color: #666;
-}
-
-.customer {
-    font-weight: 600;
-    color: #333;
-}
-
-/* Contact Section */
-.contact {
-    padding: 100px 0;
-}
-
-:root {
-    /* Customizable vertical alignment for contact model */
-    --contact-model-align: center; /* Options: flex-start, center, flex-end */
-    --contact-model-margin-top: auto; /* Adjust to move model up or down */
-    --contact-model-margin-bottom: auto; /* Adjust to move model up or down */
-}
-
-.contact-wrapper {
-    display: flex;
-    align-items: center; /* Center model and content vertically */
-    justify-content: center;
-    gap: 30px;
-    /* Allow for custom vertical alignment */
-    min-height: 500px; /* Minimum height to enable vertical positioning */
-    /* Customizable height */
-    height: auto; /* Change to fixed height if needed */
-}
-
-.contact-model {
-    /* Set max width and align to the bottom of its container */
-    max-width: 400px;
-    /* Customizable vertical alignment */
-    align-self: var(--contact-model-align, center);
-    margin-top: var(--contact-model-margin-top, auto);
-    margin-bottom: var(--contact-model-margin-bottom, auto);
-}
-
-.contact-model img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.contact-content-right {
-    flex-grow: 1;
-    max-width: 800px; /* Limit content width for better visual */
-}
-
-/* Override existing styles to align section title to the left inside the new wrapper */
-.contact-content-right .section-title {
-    text-align: left;
-    margin-left: 0;
-}
-
-.contact-content-right .section-title::after {
-    left: 0;
-    transform: none;
-}
-
-.contact-content-right .social-media-info {
-    text-align: left;
-}
-
-/* Adjust the note box style to match the image's appearance */
-.contact-content-right .note {
-    background-color: #fffde7; /* Warna kuning muda pucat */
-    padding: 15px 20px;
-    border-left: none; /* Hapus border kiri */
-    border-radius: 5px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Tambahkan sedikit bayangan */
-}
-
-.social-media-info {
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 1.1rem;
-    color: #666;
-}
-
-.contact-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.contact-option {
-    text-align: center;
-}
-
-.contact-link {
-    display: block;
-    padding: 30px 15px;
-    border-radius: 10px;
-    text-decoration: none;
-    color: white;
-    transition: transform 0.3s ease;
-    height: 100%;
-}
-
-.contact-link:hover {
-    transform: translateY(-10px);
-}
-
-.contact-link.whatsapp {
-    background: linear-gradient(135deg, #25D366, #128C7E);
-}
-
-.contact-link.tiktok {
-    background: linear-gradient(135deg, #000000, #333333);
-}
-
-.contact-link.instagram {
-    background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
-}
-
-.contact-link.tokopedia {
-    background: linear-gradient(135deg, #128C7E, #25D366);
-}
-
-.contact-link.shopee {
-    background: linear-gradient(135deg, #EE4D2D, #D73D26);
-}
-
-.contact-link.email {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-}
-
-.contact-link i {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-}
-
-.contact-link h3 {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-}
-
-.contact-link p {
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-.note {
-    background-color: #fff8e1;
-    padding: 20px;
-    border-radius: 10px;
-    border-left: 5px solid #ffc107;
-    text-align: center;
-}
-
-.note strong {
-    color: #e65100;
-}
-
-/* Footer */
-footer {
-    background-color: #333;
-    color: white;
-    padding: 50px 0 20px;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-.footer-logo img {
-    height: 60px;
-    margin-bottom: 20px;
-}
-
-.footer-info h3, .footer-contact h3 {
-    margin-bottom: 20px;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.footer-info h3::after, .footer-contact h3::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 50px;
-    height: 3px;
-    background: #25D366;
-}
-
-.social-links {
-    display: flex;
-    margin-top: 20px;
-}
-
-.social-links a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    background-color: #555;
-    border-radius: 50%;
-    margin-right: 10px;
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.social-links a:hover {
-    background-color: #25D366;
-    transform: translateY(-3px);
-}
-
-.social-icon {
-    width: 30px;
-    height: 30x;
-    margin: 0 auto 15px; /* Tambahkan 'auto' untuk center horizontal */
-    display: block;
-    /* Ensure SVG scales properly */
-    object-fit: contain;
-    /* Ensure proper alignment */
-    vertical-align: middle;
-}
-
-.social-icon-small {
-    width: 17px;
-    height: 17px;
-    display: inline-block;
-    /* Ensure SVG scales properly */
-    object-fit: contain;
-    /* Ensure proper alignment */
-    vertical-align: middle;
-}
-
-.footer-contact p {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-}
-
-.footer-contact i {
-    margin-right: 10px;
-    color: #25D366;
-}
-
-.copyright {
-    text-align: center;
-    padding-top: 20px;
-    border-top: 1px solid #555;
-}
-
-/* Floating WhatsApp Button */
-.whatsapp-float {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    background-color: #25D366;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 30px;
-    text-decoration: none;
-    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
-
-.whatsapp-float:hover {
-    transform: scale(1.1);
-    background-color: #128C7E;
-}
-
-/* Scroll animation for sections */
-.section {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.section.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-#products {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-#products.animate {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Brush highlight effect for section titles */
-.highlight-title {
-    position: relative;
-    /* 1. Tetap inline agar hanya selebar teks */
-    display: inline; 
-    /* Tambahkan sedikit padding agar highlight tidak mepet teks */
-    padding: 0.1em 0.3em; 
-
-    /* 2. KUNCI FIX MULTI-BARIS: Mengizinkan background/shadow diulang pada setiap baris yang terbungkus */
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
+    // Function to stop the automatic slideshow
+    function stopSlideShow() {
+        clearInterval(intervalId);
+    }
+
+    // Event listeners for buttons
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+            stopSlideShow();
+            nextSlide();
+            startSlideShow();
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+            stopSlideShow();
+            prevSlide();
+            startSlideShow();
+        });
+    }
+
+    // Event listeners for dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+            stopSlideShow();
+            showSlide(index);
+            startSlideShow();
+        });
+    });
+
+    // Initialize first slide so its Ken Burns animation starts, then start slideshow
+    currentSlide = -1; // so showSlide(0) is treated as a new activation
+    showSlide(0);
+    startSlideShow();
+
+    // Header scroll effect: toggle .scrolled class
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', function() {
+        if (!header) return;
+        if (window.scrollY > 60) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // Smooth scrolling for navigation links
+    const navLinks = document.querySelectorAll('nav ul li a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Only apply smooth scrolling to anchor links
+            if (this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    // Calculate offset for fixed header
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = targetSection.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
     
-    /* 3. Animasi Highlight dengan Background Gradient */
-    background-image: linear-gradient(to right, rgb(238, 255, 0), rgb(238, 255, 0));
-    background-repeat: no-repeat;
-    /* Posisi di tengah (50%) dan di bagian bawah (100%) dari teks per baris */
-    background-position: 0% 50%; 
-    /* Mulai dari lebar 0%, tinggi 50% dari tinggi baris */
-    background-size: 0% 50%; 
-    transition: background-size 1s ease;
-}
+    // Also handle other anchor links (like the "Lihat Produk" button in hero section)
+    const allAnchorLinks = document.querySelectorAll('a[href^="#"]');
+    allAnchorLinks.forEach(link => {
+        // Skip if already handled by navLinks
+        if (!link.closest('nav')) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    // Calculate offset for fixed header
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = targetSection.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+    });
 
-/* 4. Hapus pseudo-element ::after yang menyebabkan bug single-line dan konflik */
-.highlight-title::after {
-    content: none;
-    /* Tambahan agar properti lama benar-benar ditimpa */
-    position: static; 
-    width: 0;
-    height: 0;
-}
+    // Initialize any other interactive elements
+    console.log('Website Riga Jaya Malang telah dimuat');
 
-/* Animasi untuk background-size: membuat highlight penuh */
-.highlight-title.animate {
-    background-size: 100% 50%; /* Lebar penuh saat teranimasi */
-}
+    // Mobile menu toggle
+    const mobileToggle = document.querySelector('.mobile-menu-toggle');
+    const navEl = document.querySelector('nav');
+    if (mobileToggle && navEl) {
+        mobileToggle.addEventListener('click', function(e) {
+            const isOpen = navEl.classList.toggle('open');
+            mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
 
-#advantages .highlight-title {
-    background-image: linear-gradient(to right, black, black);
-}
+        // Close nav when clicking a link
+        navEl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+            navEl.classList.remove('open');
+            mobileToggle.setAttribute('aria-expanded', 'false');
+        }));
 
-#advantages .highlight-title::after {
-    content: none;
-    position: static;
-    width: 0;
-    height: 0;
-}
-
-.highlight-title.animate::after {
-    width: 100%;
-    left: 0;
-    right: auto;
-}
-
-/* Responsive adjustment for contact section */
-@media (max-width: 992px) {
-    /* Di layar yang lebih kecil, susun model dan konten secara vertikal */
-    .contact-wrapper {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .contact-model {
-        max-width: 290px; /* Perkecil sedikit di mobile/tablet */
-        order: 1; /* Pindah gambar ke atas */
-        align-self: center;
-        /* Customizable vertical alignment on mobile */
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-    
-    .contact-content-right {
-        order: 2; /* Pindah konten ke bawah */
-        max-width: 100%;
-    }
-    
-    /* Kembalikan judul dan info ke tengah di mobile */
-    .contact-content-right .section-title {
-        text-align: center;
-    }
-    
-    .contact-content-right .section-title::after {
-        left: 50%;
-        transform: translateX(-50%);
+        // Close on outside click
+        document.addEventListener('click', (ev) => {
+            if (!navEl.contains(ev.target) && !mobileToggle.contains(ev.target)) {
+                navEl.classList.remove('open');
+                mobileToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
     }
 
-    .contact-content-right .social-media-info {
-        text-align: center;
-    }
-}
+    // Scroll animation functionality
+    const sections = document.querySelectorAll('.section');
+    const productsSection = document.getElementById('products');
+    const titles = document.querySelectorAll('.highlight-title');
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-    
-    .hero-content p {
-        font-size: 1rem;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-    }
-    
-    /* Hide header on mobile */
-    header {
-        /* keep header visible on mobile but use compact layout */
-        display: block;
+    // Function to check if element is in viewport
+    function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75 &&
+            rect.bottom >= 0
+        );
     }
 
-    /* Mobile header tweaks */
-    header .container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
+    // Function to handle scroll animations
+    function handleScrollAnimations() {
+        // Section fade-in animations
+        sections.forEach(section => {
+            if (isInViewport(section)) {
+                section.classList.add('visible');
+            }
+        });
+
+        // Special animation for products section
+        if (productsSection && isInViewport(productsSection)) {
+            productsSection.classList.add('animate');
+        }
+
+        // Title highlight animations
+        titles.forEach(title => {
+            if (isInViewport(title) && !title.classList.contains('animate')) {
+                // Small delay to ensure section is visible first
+                setTimeout(() => {
+                    title.classList.add('animate');
+                }, 300);
+            }
+        });
     }
 
-    .mobile-menu-toggle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-        border-radius: 8px;
-        border: none;
-        background: rgba(0,0,0,0.05);
-        cursor: pointer;
-        z-index: 1100;
-    }
+    // Initial check in case sections are already in view
+    handleScrollAnimations();
 
-    nav {
-        position: absolute;
-        top: 100%; /* place directly below header regardless of its height */
-        left: 0;
-        right: 0;
-        background: white;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        transform-origin: top center;
-        transform: scaleY(0);
-        transition: transform 260ms ease;
-        z-index: 1050;
-        overflow: hidden;
-    }
-
-    nav.open {
-        transform: scaleY(1);
-    }
-
-    nav ul {
-        display: block;
-        padding: 10px 20px;
-    }
-
-    nav ul li {
-        margin: 8px 0;
-    }
-
-    nav ul li a {
-        display: block;
-        padding: 12px 8px;
-        font-size: 1rem;
-        color: #333;
-    }
-    
-    /* Adjust hero section margin when header is hidden */
-    .hero {
-        margin-top: 0;
-    }
-    
-    /* Make hero section full-width on mobile */
-    .hero .container {
-        padding: 0;
-        width: 100%;
-        max-width: 1200px
-    }
-    
-    .hero .carousel-container {
-        width: 100vw;
-        margin-left: calc(-50vw + 50%);
-    }
-    
-    /* ensure nav list is visible when nav.open is applied (see rules above) */
-    
-    .hero-content {
-        width: 95%;
-        padding: 20px;
-    }
-    
-    .btn {
-        display: block;
-        width: 100%;
-        margin: 10px 0;
-    }
-    
-    .secondary-btn {
-        margin-left: 0;
-    }
-    
-    .contact-options {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-    
-    .product-actions {
-        flex-direction: column;
-    }
-    
-    .product-actions .btn {
-        width: 100%;
-        margin: 2px 0;
-    }
-    
-    /* Styles for all buttons - small format on both desktop and mobile */
-    .product-actions .tokopedia-btn, 
-    .product-actions .shopee-btn,
-    .product-actions .whatsapp-btn {
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
-        padding: 8px 15px !important;
-        font-size: 14px !important;
-        border-radius: 20px !important;
-        margin: 5px;
-        width: auto;
-        height: auto;
-    }
-
-    /* Ensure Tokopedia and Shopee buttons are small on desktop too */
-    .product-actions .tokopedia-btn.small, 
-    .product-actions .shopee-btn.small {
-        padding: 8px 15px !important;
-        font-size: 14px !important;
-        border-radius: 20px !important;
-        min-width: 40px !important;
-        min-height: 30px !important;
-        width: auto !important;
-        height: auto !important;
-    }
-
-    .product-actions .tokopedia-btn span, 
-    .product-actions .shopee-btn span {
-        display: none !important;
-    }
-
-    .product-actions .tokopedia-btn img, 
-    .product-actions .shopee-btn img,
-    .product-actions .whatsapp-btn img {
-        display: block;
-        width: 16px !important;
-        height: 16px !important;
-    }
-
-    /* Show WhatsApp text */
-    .product-actions .whatsapp-btn span {
-        display: inline-block !important;
-        margin-left: 5px;
-    }
-    
-    /* Ensure WhatsApp button is also small on desktop */
-    .product-actions .whatsapp-btn.small {
-        padding: 8px 15px !important;
-        font-size: 14px !important;
-        border-radius: 20px !important;
-        min-width: 40px !important;
-        min-height: 30px !important;
-        width: auto !important;
-        height: auto !important;
-    }
-    
-    /* Mobile styles for product actions */
-    .product-actions {
-        flex-direction: row;
-        justify-content: center;
-        gap: 10px;
-    }
-    
-    /* Catalog buttons keep their original long format */
-    .product-actions .catalog-btn.small {
-        padding: 8px 15px;
-        font-size: 14px;
-        border-radius: 20px;
-        margin: 5px;
-        width: auto;
-        height: auto;
-        display: inline-block;
-    }
-    
-    .catalog-detail {
-        padding: 80px 0 30px;
-    }
-    
-    /* MODIFIED RESPONSIVE STYLES FOR PRICE-INFO */
-    .price-info {
-        padding: 20px;
-        margin-top: 30px;
-    }
-
-    .price-info-wrapper {
-        flex-direction: column;
-        text-align: center;
-        gap: 0;
-    }
-
-    .price-info-image {
-        position: static; /* Reset position for stacking */
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    .price-info-image img {
-        max-width: 80%; /* Adjust size for mobile */
-    }
-
-    .price-info-content {
-        margin-left: 0; /* Reset margin */
-    }
-    
-    /* Hide carousel controls on mobile */
-    .carousel-controls {
-        display: none !important;
-    }
-    
-}
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScrollAnimations);
+});
