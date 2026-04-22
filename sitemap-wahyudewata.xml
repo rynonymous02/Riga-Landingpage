@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Wahyu Dewata Studio — Sitemap Fotografi & Kreatif -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Halaman Utama Wahyu Dewata Studio -->
+  <url>
+    <loc>https://gwgroupstudio.com/wahyudewata</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Portfolio / Galeri -->
+  <url>
+    <loc>https://gwgroupstudio.com/wahyudewata#portfolio</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Layanan Fotografi -->
+  <url>
+    <loc>https://gwgroupstudio.com/wahyudewata#services</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Tentang / Profil -->
+  <url>
+    <loc>https://gwgroupstudio.com/wahyudewata#about</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Kontak -->
+  <url>
+    <loc>https://gwgroupstudio.com/wahyudewata#contact</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>

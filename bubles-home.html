@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BubblesCo — Lash Studio Bali</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink-deep:   #d4789a;
+      --pink-mid:    #e8a6bf;
+      --pink-light:  #f5d4e3;
+      --pink-blush:  #faedf4;
+      --brown-warm:  #c4a882;
+      --brown-light: #e8d5be;
+      --brown-cream: #f5ede0;
+      --cream:       #fdf8f3;
+      --white:       #ffffff;
+      --text-dark:   #3d2b1f;
+      --text-mid:    #6b4f3a;
+      --text-light:  #a07d68;
+      /* Single source of truth for spacing */
+      --px: clamp(1.5rem, 5vw, 5rem);
+      --max-w: 1200px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: .5;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--pink-mid); border-radius: 2px; }
+
+    /* ══ WRAPPER — single rule used everywhere ══ */
+    .wrapper {
+      max-width: var(--max-w);
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: var(--px);
+      padding-right: var(--px);
+    }
+
+    /* ══ NAV ══ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding-top: 1.1rem; padding-bottom: 1.1rem;
+      background: rgba(253,248,243,0.82);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(212,120,154,0.12);
+    }
+    nav .wrapper { display: flex; align-items: center; justify-content: space-between; }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: .55rem;
+      text-decoration: none;
+    }
+    .nav-logo img { width: 30px; height: 30px; object-fit: contain; flex-shrink: 0; }
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 500; letter-spacing: .06em;
+      color: var(--text-dark);
+    }
+    .nav-logo-text span { color: var(--pink-deep); }
+
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: .78rem; font-weight: 300; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--text-mid);
+      text-decoration: none; transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--pink-deep); }
+
+    .nav-cta {
+      padding: .55rem 1.4rem;
+      background: var(--pink-deep); color: var(--white);
+      font-size: .72rem; font-weight: 400; letter-spacing: .18em;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 60px; transition: background .3s, transform .2s;
+    }
+    .nav-cta:hover { background: var(--text-dark); transform: scale(1.03); }
+
+    /* ══ HERO ══ */
+    .hero-section { position: relative; overflow: hidden; min-height: 100vh; }
+    .hero-section::before {
+      content: '';
+      position: absolute; top: -12rem; right: -8rem;
+      width: 55vw; height: 55vw; max-width: 700px; max-height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, var(--pink-light) 0%, var(--brown-cream) 60%, transparent 80%);
+      opacity: .7; pointer-events: none;
+    }
+    .hero-section::after {
+      content: '';
+      position: absolute; bottom: -10rem; left: -6rem;
+      width: 35vw; height: 35vw; max-width: 480px; max-height: 480px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--brown-light) 0%, transparent 70%);
+      opacity: .5; pointer-events: none;
+    }
+
+.hero {
+  min-height: 100vh;
+  display: grid; 
+  grid-template-columns: 1fr 1fr;
+  align-items: flex-end; /* UBAH DARI center KE flex-end */
+  padding-top: 8rem; 
+  padding-bottom: 0;
+  padding-left: var(--px); 
+  padding-right: var(--px);
+  max-width: var(--max-w); 
+  margin: 0 auto;
+  gap: 3rem; 
+  position: relative;
+}
+
+    .hero-text { 
+    position: relative; 
+    z-index: 2; 
+    margin-bottom: 10vh; /* Sesuaikan angka ini agar posisi teks tetap proporsional */
+}
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--pink-blush); border: 1px solid var(--pink-mid);
+      border-radius: 60px; padding: .4rem 1.1rem;
+      font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--pink-deep); margin-bottom: 1.8rem;
+      animation: fadeUp .8s ease both;
+    }
+    .hero-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5.5vw, 5.2rem);
+      font-weight: 300; line-height: 1.08; letter-spacing: -.01em;
+      color: var(--text-dark);
+      animation: fadeUp .9s .1s ease both;
+    }
+    h1 em { font-style: italic; color: var(--pink-deep); }
+
+    .hero-sub {
+      margin-top: 1.4rem;
+      font-size: 1rem; font-weight: 300; line-height: 1.7;
+      color: var(--text-light); max-width: 420px;
+      animation: fadeUp .9s .2s ease both;
+    }
+
+    .hero-actions {
+      margin-top: 2.6rem; display: flex; gap: 1rem; flex-wrap: wrap;
+      animation: fadeUp .9s .3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: .55rem;
+      padding: .85rem 2rem;
+      background: var(--pink-deep); color: var(--white);
+      font-size: .8rem; font-weight: 400; letter-spacing: .14em;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 60px; transition: all .3s;
+      box-shadow: 0 8px 24px rgba(212,120,154,.35);
+    }
+    .btn-primary:hover { background: var(--text-dark); box-shadow: 0 8px 28px rgba(61,43,31,.25); transform: translateY(-2px); }
+
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: .55rem;
+      padding: .85rem 2rem;
+      background: transparent; color: var(--text-mid);
+      font-size: .8rem; font-weight: 400; letter-spacing: .14em;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 60px; border: 1px solid var(--brown-light); transition: all .3s;
+    }
+    .btn-secondary:hover { border-color: var(--pink-mid); color: var(--pink-deep); }
+
+    .hero-stats {
+      margin-top: 3.5rem; display: flex; gap: 2.5rem;
+      animation: fadeUp .9s .4s ease both;
+    }
+    .stat { display: flex; flex-direction: column; gap: .25rem; }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 500; color: var(--text-dark); }
+    .stat-num span { color: var(--pink-deep); }
+    .stat-label { font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-light); font-weight: 300; }
+
+.hero-visual {
+    position: relative; 
+    z-index: 2;
+    display: flex; 
+    justify-content: flex-end; 
+    align-items: flex-end; /* Ini sudah benar untuk mendorong ke bawah */
+    padding-bottom: 0;    /* Tambahkan ini */
+    overflow: visible;      /* Opsional: agar bayangan/shadow tidak terpotong */
+}
+ .hero-visual img.hero-img {
+    width: 150%; 
+    max-width: 1000px; 
+    height: auto;
+    display: block;        /* Sudah benar */
+    margin-bottom: 0;      /* Pastikan margin bawah nol */
+    vertical-align: bottom;
+    transform: translateX(100px) /* Menghilangkan gap kecil di bawah elemen inline-block/image */
+}
+
+    .float-pill {
+      position: absolute;
+      background: rgba(255,255,255,.88); backdrop-filter: blur(8px);
+      border-radius: 60px; padding: .5rem 1.1rem;
+      font-size: .72rem; letter-spacing: .1em;
+      color: var(--text-dark); font-weight: 400;
+      box-shadow: 0 4px 16px rgba(0,0,0,.08);
+      border: 1px solid rgba(255,255,255,.9);
+      display: flex; align-items: center; gap: .45rem;
+    }
+    .float-pill svg { width: 12px; height: 12px; color: var(--pink-deep); flex-shrink: 0; }
+    .float-pill-1 { top: 18%; right: 0; animation: float1 4s ease-in-out infinite; }
+    .float-pill-2 { bottom: 28%; left: 0; animation: float2 5s 1s ease-in-out infinite; }
+    .float-pill-3 { top: 55%; right: 2%; animation: float1 4.5s .5s ease-in-out infinite; }
+
+    @keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes float2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+    /* ══ MARQUEE ══ */
+    .marquee-wrap { overflow: hidden; background: var(--pink-deep); padding: .85rem 0; }
+    .marquee-track { display: flex; animation: marquee 22s linear infinite; white-space: nowrap; }
+    .marquee-item { flex-shrink: 0; font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.9); padding: 0 2rem; }
+    .marquee-dot { flex-shrink: 0; color: rgba(255,255,255,.4); padding: 0 .5rem; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ══ SECTIONS ══ */
+    .section { padding: 6rem 0; }
+
+    .section-header {
+      display: flex; flex-direction: column; align-items: center;
+      gap: .7rem; text-align: center; margin-bottom: 3.5rem;
+    }
+    .section-tag { font-size: .68rem; letter-spacing: .24em; text-transform: uppercase; color: var(--pink-deep); font-weight: 400; }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 300;
+      color: var(--text-dark); line-height: 1.15;
+    }
+    h2 em { font-style: italic; color: var(--pink-deep); }
+    .section-desc { font-size: .92rem; font-weight: 300; line-height: 1.75; color: var(--text-light); max-width: 480px; }
+
+    /* ══ SERVICES ══ */
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+    .service-card {
+      background: var(--white); border-radius: 24px; padding: 2.4rem 2rem;
+      border: 1px solid rgba(212,120,154,.1);
+      position: relative; overflow: hidden;
+      transition: transform .3s, box-shadow .3s; cursor: default;
+    }
+    .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(212,120,154,.15); }
+    .service-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--pink-light), var(--pink-deep));
+      opacity: 0; transition: opacity .3s;
+    }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-icon {
+      width: 44px; height: 44px; margin-bottom: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--pink-blush); border-radius: 12px;
+    }
+    .service-icon svg { width: 22px; height: 22px; color: var(--pink-deep); }
+    .service-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 500; color: var(--text-dark); margin-bottom: .6rem; }
+    .service-desc { font-size: .84rem; font-weight: 300; line-height: 1.7; color: var(--text-light); }
+    .service-tag {
+      display: inline-block; margin-top: 1.2rem; padding: .3rem .85rem;
+      background: var(--pink-blush); border-radius: 60px;
+      font-size: .68rem; letter-spacing: .14em; color: var(--pink-deep); text-transform: uppercase;
+    }
+
+    /* ══ ABOUT US ══ */
+    .about-section {
+      padding: 7rem 0;
+      position: relative;
+      overflow: hidden;
+      background: var(--white);
+    }
+    .about-section::before {
+      content: '';
+      position: absolute; top: -6rem; left: -6rem;
+      width: 32rem; height: 32rem; border-radius: 50%;
+      background: radial-gradient(circle, var(--pink-blush) 0%, transparent 70%);
+      pointer-events: none; opacity: .6;
+    }
+    .about-section::after {
+      content: '';
+      position: absolute; bottom: -5rem; right: -5rem;
+      width: 24rem; height: 24rem; border-radius: 50%;
+      background: radial-gradient(circle, var(--brown-cream) 0%, transparent 70%);
+      pointer-events: none; opacity: .7;
+    }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      align-items: center;
+      position: relative; z-index: 1;
+    }
+    .about-left {}
+    .about-label {
+      font-size: .68rem; letter-spacing: .28em; text-transform: uppercase;
+      color: var(--pink-deep); font-weight: 400; margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .about-label::before {
+      content: ''; display: inline-block; width: 30px; height: 1px;
+      background: var(--pink-deep);
+    }
+    .about-left h2 { margin-bottom: 1.8rem; line-height: 1.12; }
+    .about-year-badge {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .6rem 1.4rem;
+      border: 1px solid var(--pink-light);
+      border-radius: 60px; background: var(--pink-blush);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 500;
+      color: var(--pink-deep); margin-top: 2rem;
+      letter-spacing: .06em;
+    }
+    .about-year-badge svg { width: 14px; height: 14px; }
+
+    .about-right {}
+    .about-body-text {
+      font-size: .95rem; font-weight: 300; line-height: 1.9;
+      color: var(--text-mid);
+    }
+    .about-body-text p { margin-bottom: 1.5rem; }
+    .about-body-text p:last-child { margin-bottom: 0; }
+
+    .about-pillars {
+      display: grid; grid-template-columns: 1fr 1fr; gap: .85rem;
+      margin-top: 2.5rem;
+    }
+    .about-pillar {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: 1.1rem 1.2rem;
+      background: var(--cream); border-radius: 16px;
+      border: 1px solid rgba(212,120,154,.1);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .about-pillar:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,120,154,.1); }
+    .about-pillar-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--pink-deep); flex-shrink: 0; margin-top: .38rem;
+    }
+    .about-pillar-text {
+      font-size: .78rem; font-weight: 300; line-height: 1.6;
+      color: var(--text-mid);
+    }
+    .about-pillar-text strong {
+      display: block; font-family: 'Cormorant Garamond', serif;
+      font-size: .95rem; font-weight: 500; color: var(--text-dark);
+      margin-bottom: .2rem;
+    }
+
+    /* ══ WHY-BOX REFINEMENTS ══ */
+    .why-section {
+      background: linear-gradient(135deg, var(--pink-blush) 0%, var(--brown-cream) 100%);
+      padding: 6rem 0; position: relative; overflow: hidden;
+    }
+    .why-section::before {
+      content: ''; position: absolute; top: -8rem; right: -8rem;
+      width: 40rem; height: 40rem; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,120,154,.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .why-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .why-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+    .why-box {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 2.4rem 2rem;
+      border: 1px solid rgba(212,120,154,.1);
+      position: relative; overflow: hidden;
+      transition: transform .3s, box-shadow .3s;
+      cursor: default;
+    }
+    .why-box:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(212,120,154,.15); }
+    .why-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--pink-light), var(--pink-deep));
+      opacity: 0; transition: opacity .3s;
+    }
+    .why-box:hover::before { opacity: 1; }
+
+    .why-box-icon {
+      width: 44px; height: 44px; margin-bottom: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--pink-blush); border-radius: 12px;
+    }
+    .why-box-icon svg { width: 22px; height: 22px; color: var(--pink-deep); }
+    .why-box-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 500; color: var(--text-dark); margin-bottom: .6rem; }
+    .why-box-desc { font-size: .84rem; font-weight: 300; line-height: 1.7; color: var(--text-light); }
+    .why-text { position: relative; z-index: 1; }
+    .why-text h2 { margin-bottom: 1.2rem; }
+    .why-text p { font-size: .92rem; font-weight: 300; line-height: 1.8; color: var(--text-mid); margin-bottom: 2rem; }
+
+    /* ══ TESTIMONIALS ══ */
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+
+    .testi-card {
+      background: var(--white); border-radius: 24px; padding: 2rem;
+      border: 1px solid rgba(196,168,130,.15); position: relative;
+    }
+    .testi-card::before {
+      content: '"'; position: absolute; top: .8rem; right: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem; line-height: 1; color: var(--pink-light);
+    }
+    .testi-stars { display: flex; gap: .2rem; margin-bottom: .8rem; }
+    .testi-stars svg { width: 14px; height: 14px; color: var(--pink-deep); }
+    .testi-text { font-size: .88rem; font-weight: 300; line-height: 1.75; color: var(--text-mid); margin-bottom: 1.4rem; }
+    .testi-author { display: flex; align-items: center; gap: .75rem; }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--pink-mid), var(--brown-warm));
+      display: flex; align-items: center; justify-content: center;
+    }
+    .testi-avatar svg { width: 18px; height: 18px; color: white; }
+    .testi-name { font-size: .8rem; font-weight: 400; color: var(--text-dark); }
+    .testi-location { font-size: .7rem; color: var(--text-light); font-weight: 300; }
+
+    /* ══ CTA ══ */
+    .cta-section {
+      background: linear-gradient(160deg, var(--text-dark) 0%, #5a3325 100%);
+      padding: 6rem 0; position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: ''; position: absolute; top: -10rem; right: -10rem;
+      width: 50rem; height: 50rem; border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,120,154,.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-section::after {
+      content: ''; position: absolute; bottom: -8rem; left: -6rem;
+      width: 30rem; height: 30rem; border-radius: 50%;
+      background: radial-gradient(circle, rgba(196,168,130,.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; position: relative; z-index: 2; }
+    .cta-text h2 { color: var(--white); margin-bottom: 1rem; font-size: clamp(2rem, 3.5vw, 3.2rem); }
+    .cta-text h2 em { color: var(--pink-mid); }
+    .cta-text p { font-size: .92rem; font-weight: 300; line-height: 1.8; color: rgba(255,255,255,.65); margin-bottom: 2.5rem; }
+    .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-wa {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .9rem 2.2rem; background: #25D366; color: var(--white);
+      font-size: .8rem; font-weight: 400; letter-spacing: .14em;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 60px; transition: all .3s;
+      box-shadow: 0 8px 24px rgba(37,211,102,.3);
+    }
+    .btn-wa:hover { background: #1ebe59; transform: translateY(-2px); }
+
+    .btn-ig {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .9rem 2.2rem; background: transparent; color: rgba(255,255,255,.8);
+      font-size: .8rem; font-weight: 400; letter-spacing: .14em;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 60px; border: 1px solid rgba(255,255,255,.25); transition: all .3s;
+    }
+    .btn-ig:hover { border-color: var(--pink-mid); color: var(--pink-mid); }
+
+    .location-info { display: flex; flex-direction: column; gap: 1.4rem; }
+    .location-card {
+      background: rgba(255,255,255,.06); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px; padding: 1.5rem 1.8rem;
+      display: flex; align-items: flex-start; gap: 1.1rem;
+    }
+    .location-card-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: .1rem;
+    }
+    .location-card-icon svg { width: 18px; height: 18px; color: var(--pink-mid); }
+    .location-card-title { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--pink-mid); font-weight: 300; margin-bottom: .3rem; }
+    .location-card-text { font-size: .9rem; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,.8); }
+
+    /* ══ FOOTER ══ */
+    footer { background: var(--text-dark); border-top: 1px solid rgba(255,255,255,.07); padding: 2.4rem 0; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { display: flex; align-items: center; gap: .45rem; }
+    .footer-logo img { width: 22px; height: 22px; object-fit: contain; opacity: .65; }
+    .footer-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; color: rgba(255,255,255,.8); }
+    .footer-logo-text span { color: var(--pink-mid); }
+    .footer-copy { font-size: .72rem; font-weight: 300; letter-spacing: .08em; color: rgba(255,255,255,.35); }
+    .footer-links { display: flex; gap: 1.8rem; }
+    .footer-links a { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); text-decoration: none; transition: color .3s; }
+    .footer-links a:hover { color: var(--pink-mid); }
+
+    /* ══ ANIMATIONS ══ */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 900px) {
+      :root { --px: 1.5rem; }
+      .nav-links { display: none; }
+      .hero {
+    /* Mengubah grid menjadi satu kolom agar gambar dan teks bertumpuk */
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .hero-badge {
+      display: none;
+    }
+      .hero-section::before, .hero-section::after { display: none; }
+      .hero-sub { max-width: 100%; }
+      .hero-actions, .hero-stats { justify-content: center; }
+      .hero-visual {
+    order: 1; /* Gambar ditaruh di urutan pertama (paling atas) */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: -2rem; /* Membuat teks sedikit naik mendekati gambar agar artistik */
+    
+    /* Gradasi transparan di bawah agar halus */
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  }
+      .hero-visual img.hero-img {
+    width: 90%; /* Sesuaikan besar gambar di mobile */
+    max-width: 400px;
+    height: auto;
+    transform: none; /* Reset geser kanan desktop */
+  }
+  .hero-text {
+    order: 2; /* Teks ditaruh di urutan kedua (di bawah gambar) */
+    padding: 0 20px;
+    z-index: 5;
+  }
+  .hero-text h1 {
+    font-size: 2.8rem;
+    line-height: 1.1;
+  }
+      .float-pill-1, .float-pill-2, .float-pill-3 { display: none; }
+      .section { padding: 4rem 0; }
+      .why-section, .cta-section { padding: 4rem 0; }
+      .services-grid { grid-template-columns: 1fr; }
+      .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .about-pillars { grid-template-columns: 1fr; }
+      .why-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .cta-inner { grid-template-columns: 1fr; gap: 3rem; }
+      footer { padding: 2rem 0; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .why-visual { grid-template-columns: 1fr; }
+      .why-box:nth-child(2), .why-box:nth-child(4) { margin-top: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="wrapper">
+      <a class="nav-logo" href="#">
+        <img src="images/bubble-logo.svg" alt="BubblesCo Logo" />
+        <span class="nav-logo-text">Bubbles<span>Co</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact">Lokasi</a></li>
+      </ul>
+      <a class="nav-cta" href="https://api.whatsapp.com/message/LPYVIMHPXPUCK1?autoload=1&app_absent=0&utm_source=ig" target="_blank">Book Now</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero">
+      <div class="hero-text">
+        <div class="hero-badge"><span>✨</span> Since 2019 · Bali Tabanan</div>
+        
+        <h1>Beauty begins<br/>with <em>perfect</em><br/>lashes.</h1>
+        <p class="hero-sub">Lash Studio terpercaya di Bali — spesialis Eyelash Extension &amp; Lash Lift untuk tampilan mata yang memukau setiap hari.</p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="https://api.whatsapp.com/message/LPYVIMHPXPUCK1?autoload=1&app_absent=0&utm_source=ig" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.979-1.406A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.963 7.963 0 01-4.063-1.113l-.291-.173-3.006.849.862-2.948-.19-.302A7.968 7.968 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+            Booking via WhatsApp
+          </a>
+          <a class="btn-secondary" href="https://www.instagram.com/bubblesco.id/" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            Lihat Instagram
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num">5<span>+</span></span><span class="stat-label">Tahun Pengalaman</span></div>
+          <div class="stat"><span class="stat-num">1K<span>+</span></span><span class="stat-label">Happy Clients</span></div>
+          <div class="stat"><span class="stat-num">5<span>.0</span></span><span class="stat-label">Rating Terbaik</span></div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <img class="hero-img" src="images/buble-home.webp" alt="BubblesCo Lash Studio" />
+        <div class="float-pill float-pill-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Lash Extension
+        </div>
+        <div class="float-pill float-pill-2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Lash Lift
+        </div>
+        <div class="float-pill float-pill-3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Since 2019
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Eyelash Extension</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Lash Lift</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Lash Tint</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Classic Lash</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Volume Lash</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Mega Volume</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Bali Tabanan</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Since 2019</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Eyelash Extension</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Lash Lift</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Lash Tint</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Classic Lash</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Volume Lash</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Mega Volume</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Bali Tabanan</span><span class="marquee-dot">·</span>
+      <span class="marquee-item">Since 2019</span><span class="marquee-dot">·</span>
+    </div>
+  </div>
+
+  <!-- ABOUT US -->
+  <section id="about" class="about-section">
+    <div class="wrapper">
+      <div class="about-inner">
+        <div class="about-left reveal">
+          <div class="about-label">About Us</div>
+          <h2>Seni Keindahan<br/>yang <em>Tak Tergesa</em></h2>
+          <p style="font-size:.92rem;font-weight:300;line-height:1.8;color:var(--text-light);margin-top:1.2rem;max-width:360px;">Destinasi kecantikan yang mengedepankan keanggunan, presisi, dan kualitas tanpa kompromi — sejak 2019.</p>
+          <div class="about-year-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Berdiri Sejak 2019
+          </div>
+        </div>
+        <div class="about-right reveal">
+          <div class="about-body-text">
+            <p>Bubblesco.id hadir sebagai destinasi kecantikan yang mengedepankan keanggunan, presisi, dan kualitas tanpa kompromi. Kami menghadirkan seni eyelash extension yang dirancang untuk menonjolkan keindahan alami dengan sentuhan yang halus dan berkelas.</p>
+            <p>Setiap layanan merupakan pengalaman yang dipersonalisasi—tenang, nyaman, dan eksklusif. Dengan perhatian tinggi pada detail dan standar teknik yang terkurasi, kami menciptakan hasil yang ringan, rapi, dan menyatu sempurna, menghadirkan kesan effortless yang tetap memikat.</p>
+            <p>Lebih dari sekadar studio, Bubblesco.id juga menjadi ruang berkembang melalui program pelatihan profesional yang dirancang untuk mencetak talenta dengan standar tinggi dan visi estetika yang kuat.</p>
+          </div>
+          <div class="about-pillars">
+            <div class="about-pillar">
+              <div class="about-pillar-dot"></div>
+              <div class="about-pillar-text">
+                <strong>Keanggunan & Presisi</strong>
+                Setiap helai dikerjakan dengan teknik terkurasi untuk hasil yang menyatu sempurna.
+              </div>
+            </div>
+            <div class="about-pillar">
+              <div class="about-pillar-dot"></div>
+              <div class="about-pillar-text">
+                <strong>Pengalaman Personal</strong>
+                Sesi yang tenang, nyaman, dan eksklusif — dirancang khusus untuk kamu.
+              </div>
+            </div>
+            <div class="about-pillar">
+              <div class="about-pillar-dot"></div>
+              <div class="about-pillar-text">
+                <strong>Pelatihan Profesional</strong>
+                Program untuk mencetak talenta dengan standar tinggi dan visi estetika kuat.
+              </div>
+            </div>
+            <div class="about-pillar">
+              <div class="about-pillar-dot"></div>
+              <div class="about-pillar-text">
+                <strong>Kemewahan dalam Detail</strong>
+                Setiap momen berharga, setiap sentuhan terasa personal dan elegan.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="section">
+    <div class="wrapper">
+      <div class="section-header">
+        <span class="section-tag">Our Services</span>
+        <h2>Layanan <em>Unggulan</em> Kami</h2>
+        <p class="section-desc">Setiap treatment dirancang untuk memberikan hasil terbaik sesuai bentuk mata dan keinginan kamu.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div class="service-title">Classic Lash Extension</div>
+          <p class="service-desc">Tampilan natural dan elegan dengan satu bulu mata per helai. Cocok untuk kamu yang ingin tampil cantik sehari-hari tanpa terkesan berlebihan.</p>
+          <span class="service-tag">Natural Look</span>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+          <div class="service-title">Volume Lash Extension</div>
+          <p class="service-desc">Teknik kipas dengan multiple bulu mata untuk hasil yang lebih tebal dan dramatis. Sempurna untuk event spesial atau tampilan glam setiap hari.</p>
+          <span class="service-tag">Dramatic &amp; Full</span>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="service-title">Mega Volume</div>
+          <p class="service-desc">Volume maksimal dengan kipas ultra-ringan. Tampilan yang luar biasa penuh dan lebat tanpa membebani bulu mata asli kamu.</p>
+          <span class="service-tag">Maximum Volume</span>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+          <div class="service-title">Lash Lift</div>
+          <p class="service-desc">Angkat bulu mata asli kamu secara permanen selama 6-8 minggu. Hasilnya: mata terlihat lebih besar, terbuka, dan awet cantik tanpa extension.</p>
+          <span class="service-tag">Natural Enhancement</span>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v6l4 2"/></svg></div>
+          <div class="service-title">Lash Tint</div>
+          <p class="service-desc">Pewarnaan bulu mata untuk tampilan yang lebih gelap dan menawan. Sering dikombinasikan dengan Lash Lift untuk hasil sempurna.</p>
+          <span class="service-tag">Add-on Service</span>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+          <div class="service-title">Lash Removal &amp; Refill</div>
+          <p class="service-desc">Layanan lepas extension lama secara aman dan refill untuk menjaga tampilan lash extension kamu selalu baru dan segar.</p>
+          <span class="service-tag">Maintenance</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <div id="why" class="why-section">
+    <div class="wrapper">
+      <div class="why-inner">
+        <div class="why-visual">
+          <div class="why-box reveal">
+            <div class="why-box-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <div class="why-box-title">Pengalaman 5+ Tahun</div>
+            <p class="why-box-desc">Berdiri sejak 2019, kami telah melayani ribuan klien di Bali dengan standar kualitas terbaik.</p>
+          </div>
+          <div class="why-box reveal">
+            <div class="why-box-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div class="why-box-title">Bahan Premium</div>
+            <p class="why-box-desc">Menggunakan bahan-bahan berkualitas tinggi yang aman untuk kulit sensitif sekalipun.</p>
+          </div>
+          <div class="why-box reveal">
+            <div class="why-box-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div class="why-box-title">Terlatih &amp; Bersertifikat</div>
+            <p class="why-box-desc">Seluruh lash artist kami telah menjalani pelatihan profesional dan bersertifikat.</p>
+          </div>
+          <div class="why-box reveal">
+            <div class="why-box-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <div class="why-box-title">Kepuasan Terjamin</div>
+            <p class="why-box-desc">Rating bintang 5 dari ratusan ulasan pelanggan setia kami di seluruh Bali.</p>
+          </div>
+        </div>
+        <div class="why-text">
+          <span class="section-tag">Why BubblesCo</span>
+          <h2 style="margin-top:.6rem">Kenapa Pilih<br/><em>BubblesCo?</em></h2>
+          <p>Kami bukan sekadar lash studio biasa. Di BubblesCo, setiap sesi adalah pengalaman yang personal, nyaman, dan mewah. Kami memahami bahwa bulu mata adalah detail kecil yang memberikan dampak besar pada kepercayaan diri kamu.</p>
+          <p>Dengan lokasi strategis di Tabanan, Bali, kami siap mewujudkan impian bulu mata sempurnamu sejak 2019.</p>
+          <a class="btn-primary" href="https://api.whatsapp.com/message/LPYVIMHPXPUCK1?autoload=1&app_absent=0&utm_source=ig" target="_blank" style="display:inline-flex">Konsultasi Gratis</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials" class="section">
+    <div class="wrapper">
+      <div class="section-header">
+        <span class="section-tag">Testimonials</span>
+        <h2>Kata Mereka <em>Tentang Kami</em></h2>
+        <p class="section-desc">Kepuasan pelanggan adalah prioritas utama kami di setiap sesi.</p>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card reveal">
+          <div class="testi-stars">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-text">Lash extension di sini hasilnya natural banget! Sudah 2 tahun jadi pelanggan setia BubblesCo dan ga pernah kecewa. Lash artist-nya ramah dan profesional.</p>
+          <div class="testi-author">
+            <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div><div class="testi-name">Ayu Dewi</div><div class="testi-location">Denpasar, Bali</div></div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="testi-stars">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-text">Lash lift di BubblesCo keren banget, bertahan lama dan hasilnya cantik banget. Mata langsung keliatan lebih besar. Recommended banget untuk yang mau natural look!</p>
+          <div class="testi-author">
+            <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div><div class="testi-name">Ni Luh Sari</div><div class="testi-location">Tabanan, Bali</div></div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="testi-stars">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testi-text">Volume lash extension yang aku pasang untuk pernikahan adek aku hasilnya dramatis tapi tetap anggun. Banyak yang tanya salon mana, langsung rekomendasiin BubblesCo!</p>
+          <div class="testi-author">
+            <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div><div class="testi-name">Kadek Ratna</div><div class="testi-location">Badung, Bali</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA + CONTACT -->
+  <section id="contact" class="cta-section">
+    <div class="wrapper">
+      <div class="cta-inner">
+        <div class="cta-text">
+          <span class="section-tag" style="color:var(--pink-mid)">Book An Appointment</span>
+          <h2 style="margin-top:.6rem">Siap Tampil<br/>dengan <em>Lash Sempurna?</em></h2>
+          <p>Hubungi kami sekarang dan dapatkan konsultasi gratis untuk menentukan style bulu mata yang paling cocok dengan bentuk mata kamu.</p>
+          <div class="cta-actions">
+            <a class="btn-wa" href="https://api.whatsapp.com/message/LPYVIMHPXPUCK1?autoload=1&app_absent=0&utm_source=ig" target="_blank">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.979-1.406A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.963 7.963 0 01-4.063-1.113l-.291-.173-3.006.849.862-2.948-.19-.302A7.968 7.968 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+              Chat WhatsApp
+            </a>
+            <a class="btn-ig" href="https://www.instagram.com/bubblesco.id/" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              @bubblesco.id
+            </a>
+          </div>
+        </div>
+        <div class="location-info">
+          <div class="location-card">
+            <div class="location-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div><div class="location-card-title">Lokasi</div><div class="location-card-text">Tabanan, Bali, Indonesia</div></div>
+          </div>
+          <div class="location-card">
+            <div class="location-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div><div class="location-card-title">Jam Operasional</div><div class="location-card-text">Senin – Sabtu: 09.00 – 18.00 WITA<br/>Minggu: By Appointment</div></div>
+          </div>
+          <div class="location-card">
+            <div class="location-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+            <div><div class="location-card-title">Social Media</div><div class="location-card-text">Instagram: @bubblesco.id<br/>WhatsApp: Available 24/7</div></div>
+          </div>
+          <div class="location-card">
+            <div class="location-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+            <div><div class="location-card-title">Pembayaran</div><div class="location-card-text">Cash · Transfer Bank · QRIS</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrapper">
+      <div class="footer-inner">
+        <span class="footer-logo">
+          <img src="images/bubble-logo.svg" alt="BubblesCo" />
+          <span class="footer-logo-text">Bubbles<span>Co</span></span>
+        </span>
+        <span class="footer-copy">© 2024 BubblesCo Lash Studio · Tabanan, Bali · Since 2019</span>
+        <div class="footer-links">
+          <a href="https://www.instagram.com/bubblesco.id/" target="_blank">Instagram</a>
+          <a href="https://api.whatsapp.com/message/LPYVIMHPXPUCK1?autoload=1&app_absent=0&utm_source=ig" target="_blank">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          e.target.style.transitionDelay = `${i * 0.08}s`;
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

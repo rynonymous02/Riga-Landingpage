@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  GW GroupStudio — Sitemap Index
+  Menghubungkan 4 sitemap terpisah untuk setiap lini website:
+    1. GW GroupStudio (induk)
+    2. GW Interior
+    3. Wahyu Dewata Studio
+    4. Bubbles.co
+  ============================================================
+-->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Sitemap Induk: GW GroupStudio -->
+  <sitemap>
+    <loc>https://gwgroupstudio.com/sitemap-gwgroup.xml</loc>
+    <lastmod>2026-04-22</lastmod>
+  </sitemap>
+
+  <!-- Sitemap: GW Interior -->
+  <sitemap>
+    <loc>https://gwgroupstudio.com/sitemap-gwinterior.xml</loc>
+    <lastmod>2026-04-22</lastmod>
+  </sitemap>
+
+  <!-- Sitemap: Wahyu Dewata Studio -->
+  <sitemap>
+    <loc>https://gwgroupstudio.com/sitemap-wahyudewata.xml</loc>
+    <lastmod>2026-04-22</lastmod>
+  </sitemap>
+
+  <!-- Sitemap: Bubles.co / Bubblesco -->
+  <sitemap>
+    <loc>https://gwgroupstudio.com/sitemap-bubblesco.xml</loc>
+    <lastmod>2026-04-22</lastmod>
+  </sitemap>
+
+</sitemapindex>

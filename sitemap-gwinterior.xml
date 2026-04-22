@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GW Interior — Sitemap Jasa Pemasangan Lantai & Panel -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Halaman Utama GW Interior -->
+  <url>
+    <loc>https://gwgroupstudio.com/GWinterior</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Layanan -->
+  <url>
+    <loc>https://gwgroupstudio.com/GWinterior#services</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Visi & Misi -->
+  <url>
+    <loc>https://gwgroupstudio.com/GWinterior#vision</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Testimoni / Galeri -->
+  <url>
+    <loc>https://gwgroupstudio.com/GWinterior#testimonials</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Galeri Testimoni (halaman tersendiri) -->
+  <url>
+    <loc>https://gwgroupstudio.com/testimoni</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Kontak -->
+  <url>
+    <loc>https://gwgroupstudio.com/GWinterior#contact</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>

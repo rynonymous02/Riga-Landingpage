@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Testimoni – GW Interior</title>
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ── Page Hero ── */
+        .galeri-hero {
+            background: linear-gradient(160deg, #0d1f16 0%, #1a6b47 60%, #25a86e 100%);
+            padding: 140px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .galeri-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .galeri-hero .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            padding: 8px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            transition: all 0.25s ease;
+        }
+
+        .galeri-hero .back-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .galeri-hero h1 {
+            font-family: 'Peace Sans', 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            color: #fff;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .galeri-hero p {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 1.05rem;
+            max-width: 540px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+
+        .galeri-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .galeri-stat {
+            text-align: center;
+            color: #fff;
+        }
+
+        .galeri-stat strong {
+            display: block;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--clr-accent);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-count {
+            font-size: 2rem !important;
+            font-weight: 900 !important;
+            color: var(--clr-accent);
+        }
+
+        .galeri-stat strong .fa-star {
+            font-size: 2rem;
+            vertical-align: middle;
+            margin-right: 4px;
+            color: #fbbf24;
+        }
+
+        .galeri-stat span {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* ── Gallery Grid ── */
+        .galeri-section {
+            padding: 60px 0 100px;
+            background: var(--clr-bg);
+        }
+
+        .galeri-grid {
+            columns: 3;
+            column-gap: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .galeri-grid {
+                columns: 2;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .galeri-grid {
+                columns: 1;
+            }
+        }
+
+        .galeri-item {
+            break-inside: avoid;
+            margin-bottom: 18px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            background: var(--clr-surface);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+            transition: transform 0.32s cubic-bezier(0.34, 1.46, 0.64, 1), box-shadow 0.32s ease;
+        }
+
+        .galeri-item:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .galeri-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .galeri-item:hover img {
+            transform: scale(1.04);
+        }
+
+        .galeri-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 30, 20, 0.85) 0%, transparent 55%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+
+        .galeri-item:hover .galeri-overlay {
+            opacity: 1;
+        }
+
+        .galeri-overlay-title {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .galeri-overlay-zoom {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--clr-primary);
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .galeri-item:hover .galeri-overlay-zoom {
+            opacity: 1;
+        }
+
+        /* Placeholder image styling */
+        .galeri-item .img-placeholder {
+            width: 100%;
+            display: block;
+            background: linear-gradient(135deg, #e8f4ec 0%, #d0eadb 50%, #c5e4d0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .galeri-item .img-placeholder::before {
+            content: attr(data-label);
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--clr-primary);
+            letter-spacing: 0.04em;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ── Lightbox ── */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 14, 9, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(12px);
+        }
+
+        .lightbox.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-inner {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-img {
+            max-width: 80vw;
+            max-height: 80vh;
+            border-radius: var(--radius-md);
+            object-fit: contain;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+        }
+
+        .lightbox-close {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-nav {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        .lightbox-caption {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.88rem;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* ── CTA Bottom ── */
+        .galeri-cta {
+            background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-lt));
+            padding: 72px 0;
+            text-align: center;
+        }
+
+        .galeri-cta h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 14px;
+            letter-spacing: -0.02em;
+        }
+
+        .galeri-cta p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .galeri-cta .btn-group {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline-white {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/6285745520293" class="whatsapp-float" target="_blank" aria-label="Chat WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Header -->
+    <header id="mainHeader">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo-white.webp" alt="GW Interior" class="logo-img logo-img--white">
+                    <img src="images/logo-black.webp" alt="GW Interior" class="logo-img logo-img--black">
+                </a>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Buka menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="index.html#home">Beranda</a></li>
+                    <li><a href="index.html#vision">Visi &amp; Misi</a></li>
+                    <li><a href="galeri-testimoni.html" class="active">Galeri Testimoni</a></li>
+                    <li><a href="index.html#contact">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="galeri-hero">
+        <div class="container">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+            </a>
+            <h1>Galeri Testimoni</h1>
+            <p>Koleksi foto hasil pemasangan nyata dari proyek-proyek pelanggan kami. Setiap gambar adalah bukti
+                komitmen kami terhadap kualitas.</p>
+            <div class="galeri-stats">
+                <div class="galeri-stat">
+                    <strong><span class="stat-count" data-target="500" data-suffix="+">1</span></strong>
+                    <span>Proyek Selesai</span>
+                </div>
+                <div class="galeri-stat">
+                    <strong><i class="fas fa-star"></i> <span class="stat-count" data-target="4.9" data-decimal="1">1</span></strong>
+                    <span>Rating Rata-rata</span>
+                </div>
+                <div class="galeri-stat">
+                    <strong><span class="stat-count" data-target="100" data-suffix="%">1</span></strong>
+                    <span>Bergaransi</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="galeri-section">
+        <div class="container">
+            <div class="galeri-grid" id="galeriGrid">
+
+                <!-- galeri01 -->
+                <div class="galeri-item" data-category="spc" data-index="0">
+                    <img src="images/galeri01.webp" alt="Hasil Pemasangan Lantai SPC"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri01.webp" style="display:none;height:503px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri02 -->
+                <div class="galeri-item" data-category="panel" data-index="1">
+                    <img src="images/galeri02.webp" alt="Hasil Pemasangan Wall Panel"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri02.webp" style="display:none;height:503px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri03 -->
+                <div class="galeri-item" data-category="wpc" data-index="2">
+                    <img src="images/galeri03.webp" alt="Hasil Pemasangan Decking WPC"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri03.webp" style="display:none;height:240px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri04 -->
+                <div class="galeri-item" data-category="vinyl" data-index="3">
+                    <img src="images/galeri04.webp" alt="Hasil Pemasangan Lantai Vinyl"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri04.webp" style="display:none;height:300px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri05 -->
+                <div class="galeri-item" data-category="cladding" data-index="4">
+                    <img src="images/galeri05.webp" alt="Hasil Pemasangan Wall Cladding"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri05.webp" style="display:none;height:320px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri06 -->
+                <div class="galeri-item" data-category="spc" data-index="5">
+                    <img src="images/galeri06.webp" alt="Hasil Pemasangan Lantai SPC"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri06.webp" style="display:none;height:503px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri07 -->
+                <div class="galeri-item" data-category="panel" data-index="6">
+                    <img src="images/galeri07.webp" alt="Hasil Pemasangan Wall Panel"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri07.webp" style="display:none;height:380px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri08 -->
+                <div class="galeri-item" data-category="vinyl" data-index="7">
+                    <img src="images/galeri08.webp" alt="Hasil Pemasangan Lantai Vinyl"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri08.webp" style="display:none;height:270px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri09 -->
+                <div class="galeri-item" data-category="wpc" data-index="8">
+                    <img src="images/galeri09.webp" alt="Hasil Pemasangan Decking WPC"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri09.webp" style="display:none;height:310px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri10 -->
+                <div class="galeri-item" data-category="spc" data-index="9">
+                    <img src="images/galeri10.webp" alt="Hasil Pemasangan Lantai SPC"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri10.webp" style="display:none;height:250px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri11 -->
+                <div class="galeri-item" data-category="cladding" data-index="10">
+                    <img src="images/galeri11.webp" alt="Hasil Pemasangan Wall Cladding"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri11.webp" style="display:none;height:850px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri12 -->
+                <div class="galeri-item" data-category="vinyl" data-index="11">
+                    <img src="images/galeri12.webp" alt="Hasil Pemasangan Lantai Vinyl"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri12.webp" style="display:none;height:290px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri13 -->
+                <div class="galeri-item" data-category="panel" data-index="12">
+                    <img src="images/galeri13.webp" alt="Hasil Pemasangan Wall Panel"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri13.webp" style="display:none;height:350px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri14 -->
+                <div class="galeri-item" data-category="wpc" data-index="13">
+                    <img src="images/galeri14.webp" alt="Hasil Pemasangan Decking WPC"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri14.webp" style="display:none;height:265px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+                <!-- galeri15 -->
+                <div class="galeri-item" data-category="spc" data-index="14">
+                    <img src="images/galeri15.webp" alt="Hasil Pemasangan Lantai SPC"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                    <div class="img-placeholder" data-label="galeri15.webp" style="display:none;height:305px"></div>
+                    <div class="galeri-overlay-zoom"><i class="fas fa-expand"></i></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></button>
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev"><i class="fas fa-chevron-left"></i></button>
+        <div class="lightbox-inner">
+            <img src="" alt="" class="lightbox-img" id="lightboxImg">
+        </div>
+        <button class="lightbox-nav lightbox-next" id="lightboxNext"><i class="fas fa-chevron-right"></i></button>
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+
+    <!-- CTA Section -->
+    <section class="galeri-cta">
+        <div class="container">
+            <h2>Siap Mulai Proyek Anda?</h2>
+            <p>Konsultasi gratis, survey lokasi tanpa biaya. Wujudkan ruangan impian Anda bersama GW Interior.</p>
+            <div class="btn-group">
+                <a href="https://wa.me/6285745520293" class="btn whatsapp-btn" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Konsultasi Gratis
+                </a>
+                <a href="index.html" class="btn btn-outline-white">
+                    <i class="fas fa-home"></i> Kembali ke Beranda
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/logo-white.webp" alt="GW Interior" class="footer-logo-img">
+                    <p>Jasa pemasangan interior profesional dengan kualitas terbaik dan pelayanan yang tulus.</p>
+                    <div class="social-links">
+                        <a href="https://wa.me/6285745520293" target="_blank" aria-label="WhatsApp"><i
+                                class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/rigajayamalang/" target="_blank" aria-label="Instagram"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@riga_jaya_mlg" target="_blank" aria-label="TikTok"><i
+                                class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Layanan</h4>
+                    <ul>
+                        <li><a href="index.html#services">Lantai Vinyl</a></li>
+                        <li><a href="index.html#services">Lantai SPC</a></li>
+                        <li><a href="index.html#services">Decking WPC</a></li>
+                        <li><a href="index.html#services">Wall Panel</a></li>
+                        <li><a href="index.html#services">Wall Cladding</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Perusahaan</h4>
+                    <ul>
+                        <li><a href="index.html#home">Beranda</a></li>
+                        <li><a href="index.html#advantages">Keunggulan</a></li>
+                        <li><a href="index.html#vision">Visi &amp; Misi</a></li>
+                        <li><a href="galeri-testimoni.html">Galeri Testimoni</a></li>
+                        <li><a href="index.html#contact">Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact-info">
+                    <h4>Hubungi Kami</h4>
+                    <p><i class="fas fa-phone"></i> 0857-4552-0293</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Sukun, Malang, Jawa Timur</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Jl. Pantai Kedungu, Perumahan Taman Tirta Residence, Blok
+                        B-C, No. C4, Kediri, Tabanan, Bali</p>
+                    <p><i class="fas fa-clock"></i> Senin – Sabtu, 08.00–17.00</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 GW Interior. Seluruh hak cipta dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ── Header scroll ──
+        const header = document.getElementById('mainHeader');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ── Mobile menu ──
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const nav = document.getElementById('mainNav');
+        if (toggle && nav) {
+            toggle.addEventListener('click', () => {
+                const isOpen = nav.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+        }
+
+        // ── Lightbox ──
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        let currentIndex = 0;
+        let visibleItems = [];
+        const items = document.querySelectorAll('.galeri-item');
+
+        function openLightbox(index) {
+            visibleItems = [...items].filter(i => i.style.display !== 'none');
+            currentIndex = visibleItems.indexOf(index);
+            if (currentIndex === -1) currentIndex = 0;
+            showLightboxItem(currentIndex);
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showLightboxItem(idx) {
+            const item = visibleItems[idx];
+            if (!item) return;
+            const img = item.querySelector('img');
+            const title = item.querySelector('.galeri-overlay-title');
+            lightboxImg.src = img ? img.src : '';
+            lightboxImg.alt = img ? img.alt : '';
+            lightboxCaption.textContent = title ? title.textContent : (img ? img.alt : '');
+            currentIndex = idx;
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        items.forEach(item => {
+            item.addEventListener('click', () => openLightbox(item));
+        });
+
+        document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+        document.getElementById('lightboxPrev').addEventListener('click', () => {
+            showLightboxItem((currentIndex - 1 + visibleItems.length) % visibleItems.length);
+        });
+        document.getElementById('lightboxNext').addEventListener('click', () => {
+            showLightboxItem((currentIndex + 1) % visibleItems.length);
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') document.getElementById('lightboxPrev').click();
+            if (e.key === 'ArrowRight') document.getElementById('lightboxNext').click();
+        });
+
+        // ── Stat Countdown Animation ──
+        function animateCount(el) {
+            const target = parseFloat(el.dataset.target);
+            const suffix = el.dataset.suffix || '';
+            const decimal = parseInt(el.dataset.decimal || '0');
+            const duration = 1800;
+            const start = 1;
+            const startTime = performance.now();
+
+            function update(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // easeOutExpo
+                const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                const current = start + (target - start) * ease;
+                el.textContent = (decimal > 0 ? current.toFixed(decimal) : Math.floor(current)) + suffix;
+                if (progress < 1) requestAnimationFrame(update);
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        const statsSection = document.querySelector('.galeri-stats');
+        if (statsSection) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.stat-count').forEach(animateCount);
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.5 });
+            observer.observe(statsSection);
+        }
+
+        // ── Fade in animation ──
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .galeri-item { animation: fadeInUp 0.5s ease forwards; }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Bubbles.co — Sitemap Kuliner & F&B -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Halaman Utama Bubblesco -->
+  <url>
+    <loc>https://gwgroupstudio.com/Bubblesco</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Menu / Produk -->
+  <url>
+    <loc>https://gwgroupstudio.com/Bubblesco#menu</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Tentang Bubles -->
+  <url>
+    <loc>https://gwgroupstudio.com/Bubblesco#about</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Lokasi / Outlet -->
+  <url>
+    <loc>https://gwgroupstudio.com/Bubblesco#location</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Kontak -->
+  <url>
+    <loc>https://gwgroupstudio.com/Bubblesco#contact</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>

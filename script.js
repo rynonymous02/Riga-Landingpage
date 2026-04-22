@@ -1,255 +1,265 @@
-// Carousel functionality
-document.addEventListener('DOMContentLoaded', function() {
+/* ============================================================
+   GW Interior — Main Script
+   ============================================================ */
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ──────────────────────────────────────────
+       1. CAROUSEL
+    ────────────────────────────────────────── */
     const slides = document.querySelectorAll('.carousel-slide');
     const dots = document.querySelectorAll('.dot');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
     let currentSlide = 0;
-    const slideInterval = 5000; // 5 detik
+    const SLIDE_INTERVAL = 5000;
     let intervalId;
 
-    // Function to show a specific slide
-    // Start with no slide active so the first showSlide triggers animation
-    let initial = true;
     function showSlide(index) {
-        // If requested slide is already active and not initial call, do nothing.
-        if (!initial && index === currentSlide) return;
+        if (index === currentSlide && slides[currentSlide].classList.contains('active')) return;
 
-        // Remove active class from previous slide and dot only (if any)
-        if (!initial) {
-            const prevSlide = slides[currentSlide];
-            const prevImg = prevSlide.querySelector('img');
-            // Capture current computed transform so the image doesn't snap back
-            // to its original state when we remove the .active class.
-            if (prevImg) {
-                const cs = window.getComputedStyle(prevImg);
-                const currentTransform = cs.transform || cs.webkitTransform || 'none';
-                const currentTransformOrigin = cs.transformOrigin || cs.webkitTransformOrigin || '';
-                // Apply the computed transform and transform-origin inline to preserve visual state
-                prevImg.style.transform = currentTransform;
-                prevImg.style.transformOrigin = currentTransformOrigin;
-                // Also ensure transitions on transform don't override the preserved state
-                prevImg.style.transition = 'none';
-            }
-
-            slides[currentSlide].classList.remove('active');
-            dots[currentSlide].classList.remove('active');
-
-            // After the opacity transition (1s), remove the inline transform and transition
-            // so the DOM doesn't keep stale inline styles. Use a small buffer.
-            (function(img) {
-                setTimeout(() => {
-                    if (img) {
-                        // Only clear if it still has the inline transform/transformOrigin we applied
-                        img.style.transform = '';
-                        img.style.transformOrigin = '';
-                        img.style.transition = '';
-                    }
-                }, 1100);
-            })(prevImg);
+        // Freeze the outgoing slide's image at its current Ken-Burns position
+        const prevSlide = slides[currentSlide];
+        const prevImg = prevSlide ? prevSlide.querySelector('img') : null;
+        if (prevImg) {
+            const cs = window.getComputedStyle(prevImg);
+            prevImg.style.transform = cs.transform || 'none';
+            prevImg.style.transformOrigin = cs.transformOrigin || '';
+            prevImg.style.transition = 'none';
         }
 
-        // Restart Ken Burns animation on the incoming slide's image so it runs
-        // each time the slide becomes active.
+        prevSlide && prevSlide.classList.remove('active');
+        dots[currentSlide] && dots[currentSlide].classList.remove('active');
+
+        // Clean up stale inline styles after opacity transition
+        if (prevImg) {
+            setTimeout(() => {
+                prevImg.style.transform = prevImg.style.transformOrigin = prevImg.style.transition = '';
+            }, 1100);
+        }
+
+        // Restart Ken-Burns on the incoming image
         const img = slides[index].querySelector('img');
         if (img) {
-            // Remove inline animation to reset, force reflow, then let CSS rule run
             img.style.animation = 'none';
-            // Force reflow
-            // eslint-disable-next-line no-unused-expressions
-            img.offsetWidth;
+            img.offsetWidth; // force reflow
             img.style.animation = '';
         }
 
-        // Add active class to new slide and dot
         slides[index].classList.add('active');
-        dots[index].classList.add('active');
-
+        dots[index] && dots[index].classList.add('active');
         currentSlide = index;
-        initial = false;
     }
 
-    // Function to go to next slide
-    function nextSlide() {
-        let nextIndex = (currentSlide + 1) % slides.length;
-        showSlide(nextIndex);
-    }
+    function nextSlide() { showSlide((currentSlide + 1) % slides.length); }
+    function prevSlide() { showSlide((currentSlide - 1 + slides.length) % slides.length); }
+    function startSlideShow() { intervalId = setInterval(nextSlide, SLIDE_INTERVAL); }
+    function stopSlideShow() { clearInterval(intervalId); }
 
-    // Function to go to previous slide
-    function prevSlide() {
-        let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-        showSlide(prevIndex);
-    }
+    if (nextBtn) nextBtn.addEventListener('click', () => { stopSlideShow(); nextSlide(); startSlideShow(); });
+    if (prevBtn) prevBtn.addEventListener('click', () => { stopSlideShow(); prevSlide(); startSlideShow(); });
 
-    // Function to start the automatic slideshow
-    function startSlideShow() {
-        intervalId = setInterval(nextSlide, slideInterval);
-    }
+    dots.forEach((dot, i) => dot.addEventListener('click', () => {
+        stopSlideShow(); showSlide(i); startSlideShow();
+    }));
 
-    // Function to stop the automatic slideshow
-    function stopSlideShow() {
-        clearInterval(intervalId);
-    }
-
-    // Event listeners for buttons
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function() {
-            stopSlideShow();
-            nextSlide();
-            startSlideShow();
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', function() {
-            stopSlideShow();
-            prevSlide();
-            startSlideShow();
-        });
-    }
-
-    // Event listeners for dots
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', function() {
-            stopSlideShow();
-            showSlide(index);
-            startSlideShow();
-        });
-    });
-
-    // Initialize first slide so its Ken Burns animation starts, then start slideshow
-    currentSlide = -1; // so showSlide(0) is treated as a new activation
+    // Initialise
     showSlide(0);
     startSlideShow();
 
-    // Header scroll effect: toggle .scrolled class
-    const header = document.querySelector('header');
-    window.addEventListener('scroll', function() {
+
+    /* ──────────────────────────────────────────
+       2. HEADER SCROLL EFFECT
+    ────────────────────────────────────────── */
+    const header = document.getElementById('mainHeader') || document.querySelector('header');
+    window.addEventListener('scroll', () => {
         if (!header) return;
-        if (window.scrollY > 60) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
+        header.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
 
-    // Smooth scrolling for navigation links
-    const navLinks = document.querySelectorAll('nav ul li a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Only apply smooth scrolling to anchor links
-            if (this.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                if (targetSection) {
-                    // Calculate offset for fixed header
-                    const headerHeight = document.querySelector('header').offsetHeight;
-                    const targetPosition = targetSection.offsetTop - headerHeight;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        });
-    });
-    
-    // Also handle other anchor links (like the "Lihat Produk" button in hero section)
-    const allAnchorLinks = document.querySelectorAll('a[href^="#"]');
-    allAnchorLinks.forEach(link => {
-        // Skip if already handled by navLinks
-        if (!link.closest('nav')) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                if (targetSection) {
-                    // Calculate offset for fixed header
-                    const headerHeight = document.querySelector('header').offsetHeight;
-                    const targetPosition = targetSection.offsetTop - headerHeight;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        }
-    });
 
-    // Initialize any other interactive elements
-    console.log('Website Riga Jaya Malang telah dimuat');
-
-    // Mobile menu toggle
+    /* ──────────────────────────────────────────
+       3. MOBILE MENU
+    ────────────────────────────────────────── */
     const mobileToggle = document.querySelector('.mobile-menu-toggle');
-    const navEl = document.querySelector('nav');
+    const navEl = document.getElementById('mainNav') || document.querySelector('nav');
+
     if (mobileToggle && navEl) {
-        mobileToggle.addEventListener('click', function(e) {
+        mobileToggle.addEventListener('click', () => {
             const isOpen = navEl.classList.toggle('open');
-            mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            mobileToggle.setAttribute('aria-expanded', isOpen);
+            mobileToggle.classList.toggle('active', isOpen);
         });
 
-        // Close nav when clicking a link
         navEl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
             navEl.classList.remove('open');
+            mobileToggle.classList.remove('active');
             mobileToggle.setAttribute('aria-expanded', 'false');
         }));
 
-        // Close on outside click
-        document.addEventListener('click', (ev) => {
-            if (!navEl.contains(ev.target) && !mobileToggle.contains(ev.target)) {
+        document.addEventListener('click', (e) => {
+            if (!navEl.contains(e.target) && !mobileToggle.contains(e.target)) {
                 navEl.classList.remove('open');
+                mobileToggle.classList.remove('active');
                 mobileToggle.setAttribute('aria-expanded', 'false');
             }
         });
     }
 
-    // Scroll animation functionality
-    const sections = document.querySelectorAll('.section');
-    const productsSection = document.getElementById('products');
-    const titles = document.querySelectorAll('.highlight-title');
 
-    // Function to check if element is in viewport
-    function isInViewport(element) {
-        const rect = element.getBoundingClientRect();
-        return (
-            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75 &&
-            rect.bottom >= 0
-        );
+    /* ──────────────────────────────────────────
+       4. SMOOTH SCROLL (anchor links)
+    ────────────────────────────────────────── */
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const id = link.getAttribute('href');
+            const target = id && id !== '#' ? document.querySelector(id) : null;
+            if (!target) return;
+            e.preventDefault();
+            const offset = (header ? header.offsetHeight : 76);
+            window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+        });
+    });
+
+
+    /* ──────────────────────────────────────────
+       5. SCROLL INDICATOR FADE
+    ────────────────────────────────────────── */
+    const scrollInd = document.querySelector('.scroll-indicator');
+    if (scrollInd) {
+        window.addEventListener('scroll', () => {
+            scrollInd.style.opacity = window.scrollY > 80 ? '0' : '1';
+        }, { passive: true });
     }
 
-    // Function to handle scroll animations
-    function handleScrollAnimations() {
-        // Section fade-in animations
-        sections.forEach(section => {
-            if (isInViewport(section)) {
-                section.classList.add('visible');
-            }
-        });
 
-        // Special animation for products section
-        if (productsSection && isInViewport(productsSection)) {
-            productsSection.classList.add('animate');
+    /* ──────────────────────────────────────────
+       6. SECTION FADE-IN (IntersectionObserver)
+    ────────────────────────────────────────── */
+    const sectionObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('visible');
+            const hl = entry.target.querySelector('.highlight-title');
+            if (hl) setTimeout(() => hl.classList.add('animate'), 300);
+            sectionObs.unobserve(entry.target);
+        });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.section').forEach(s => sectionObs.observe(s));
+
+
+    /* ──────────────────────────────────────────
+       7. STAGGERED CARD ANIMATIONS
+    ────────────────────────────────────────── */
+    const cardObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target
+                .querySelectorAll('.service-card, .advantage-item, .testimonial-card, .process-step')
+                .forEach((card, i) => setTimeout(() => card.classList.add('card-visible'), i * 80));
+            cardObs.unobserve(entry.target);
+        });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll(
+        '.services-grid, .advantages-grid, .testimonial-grid, .process-steps'
+    ).forEach(g => cardObs.observe(g));
+
+
+    /* ──────────────────────────────────────────
+       8. HERO STATS — ANIMATED NUMBER COUNTER
+    ────────────────────────────────────────── */
+
+    /**
+     * Easing function: ease-out cubic
+     */
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+
+    /**
+     * Animate a single stat element.
+     * @param {HTMLElement} el    – the <strong> element
+     * @param {number}  target   – final numeric value
+     * @param {string}  suffix   – e.g. '+', '%', ' Tahun'
+     * @param {number}  duration – ms (default 1800)
+     */
+    function animateCounter(el, target, suffix, duration) {
+        duration = duration || 1800;
+
+        // Determine a sensible starting value:
+        // If target ≤ 20 start from 1, else start from ~2% of target (min 10)
+        const startVal = target <= 20 ? 1 : Math.max(10, Math.round(target * 0.02));
+        const range = target - startVal;
+
+        let startTime = null;
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = easeOutCubic(progress);
+            const current = Math.round(startVal + range * eased);
+
+            el.textContent = current + suffix;
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                el.textContent = target + suffix; // ensure exact final value
+            }
         }
 
-        // Title highlight animations
-        titles.forEach(title => {
-            if (isInViewport(title) && !title.classList.contains('animate')) {
-                // Small delay to ensure section is visible first
-                setTimeout(() => {
-                    title.classList.add('animate');
-                }, 300);
-            }
-        });
+        requestAnimationFrame(step);
     }
 
-    // Initial check in case sections are already in view
-    handleScrollAnimations();
+    /**
+     * Parse a stat element's text to extract numeric value and suffix.
+     * Handles: "500+", "100%", "5 Tahun"
+     */
+    function parseStatText(text) {
+        text = text.trim();
 
-    // Add scroll event listener
-    window.addEventListener('scroll', handleScrollAnimations);
+        // Pattern: digits, then suffix
+        const match = text.match(/^(\d+)(.*)$/);
+        if (!match) return null;
+
+        return {
+            value: parseInt(match[1], 10),
+            suffix: match[2] || ''          // e.g. '+', '%', ' Tahun'
+        };
+    }
+
+    // Observe the hero-stats element so counters start when visible
+    const heroStats = document.querySelector('.hero-stats');
+    if (heroStats) {
+        let countersStarted = false;
+
+        const statsObs = new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting || countersStarted) return;
+            countersStarted = true;
+
+            heroStats.querySelectorAll('.stat-item strong').forEach(strong => {
+                const parsed = parseStatText(strong.textContent);
+                if (!parsed) return;
+
+                // Stagger each counter slightly
+                const delay = Array.from(heroStats.querySelectorAll('.stat-item strong'))
+                    .indexOf(strong) * 120;
+
+                setTimeout(() => animateCounter(strong, parsed.value, parsed.suffix), delay);
+            });
+
+            statsObs.disconnect();
+        }, { threshold: 0.5 });
+
+        statsObs.observe(heroStats);
+    }
+
+
+    /* ──────────────────────────────────────────
+       DONE
+    ────────────────────────────────────────── */
+    console.log('GW Interior — script loaded ✓');
 });

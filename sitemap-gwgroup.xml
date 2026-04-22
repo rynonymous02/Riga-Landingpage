@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GW GroupStudio — Sitemap Induk (Landing Page) -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Halaman Utama GW GroupStudio -->
+  <url>
+    <loc>https://gwgroupstudio.com/</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Anchor: Profil Pendiri -->
+  <url>
+    <loc>https://gwgroupstudio.com/#founders</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Anchor: Lini Usaha -->
+  <url>
+    <loc>https://gwgroupstudio.com/#businesses</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Anchor: Visi & Misi -->
+  <url>
+    <loc>https://gwgroupstudio.com/#vision</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Anchor: Kontak -->
+  <url>
+    <loc>https://gwgroupstudio.com/#contact</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>
