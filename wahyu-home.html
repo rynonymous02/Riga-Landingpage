@@ -547,45 +547,86 @@
     #galeri { background: var(--dark); padding: 100px 60px; }
     #galeri h2 { color: #fff; }
     #galeri .lead { color: rgba(255,255,255,.5); }
-    .carousel-wrapper {
+
+    /* Desktop 3-panel stage */
+    .gallery-stage {
       margin-top: 56px;
+      max-width: 1200px; margin-left: auto; margin-right: auto;
       position: relative;
+      display: flex; align-items: stretch; gap: 0;
+    }
+    .gallery-side {
+      flex: 0 0 160px;
+      overflow: hidden;
+      border-radius: 16px;
+      opacity: 0.38;
+      transition: opacity .4s;
+      cursor: pointer;
+      flex-shrink: 0;
+      align-self: center;
+    }
+    .gallery-side:hover { opacity: 0.55; }
+    .gallery-side img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+    .gallery-main {
+      flex: 1;
       overflow: hidden;
       border-radius: 20px;
-    }
-    .carousel-track {
-      display: flex;
-      transition: transform .6s cubic-bezier(.4,0,.2,1);
-    }
-    .carousel-slide-img {
-      flex: 0 0 100%;
       position: relative;
+      z-index: 2;
+      box-shadow: 0 20px 60px rgba(0,0,0,.55);
+      /* Height seragam — width otomatis dari flex */
+      height: 500px;
     }
-.carousel-slide-img img {
-  display: block;
-  height: 500px;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-  border-radius: 20px;
-  margin-left: auto;
-  margin-right: auto;
-}
-    .carousel-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      width: 48px; height: 48px; border-radius: 50%;
-      background: rgba(13,31,30,.75);
-      border: 1px solid rgba(255,255,255,.2);
-      backdrop-filter: blur(8px);
-      color: #fff; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background .2s, transform .2s;
-      z-index: 10;
+    /* inner track — must span all 19 slides side by side */
+    .gallery-main-track {
+      display: flex;
+      width: 1900%; /* 19 slides × 100% of container */
+      height: 100%;
+      will-change: transform;
+      transition: transform .55s cubic-bezier(.4,0,.2,1);
     }
-    .carousel-btn:hover { background: rgba(212,168,67,.85); transform: translateY(-50%) scale(1.08); }
-    .carousel-btn.prev { left: 16px; }
-    .carousel-btn.next { right: 16px; }
-    .carousel-btn svg { width: 20px; height: 20px; }
+    .gallery-main-slide {
+      /* each slide occupies 1/19 of the track = exactly 100% of the visible .gallery-main */
+      width: calc(100% / 19);
+      flex: 0 0 calc(100% / 19);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0d1f1e;
+    }
+    .gallery-main-slide img {
+      /* Tinggi seragam = penuh container, lebar mengikuti ratio asli gambar */
+      height: 100%;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    /* Side panel tingginya ikut .gallery-main */
+    #gallerySidePrev, #gallerySideNext {
+      height: 460px;
+    }
+    /* Side panels are the nav — subtle edge gradient */
+    .gallery-side { position: relative; }
+    .gallery-side::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(13,31,30,.5) 0%, transparent 60%);
+      pointer-events: none;
+      border-radius: 16px;
+      transition: opacity .3s;
+    }
+    #gallerySideNext::after {
+      background: linear-gradient(to left, rgba(13,31,30,.5) 0%, transparent 60%);
+    }
+    .gallery-side:hover::after { opacity: 0.4; }
+
+    /* Dots & progress */
     .carousel-dots-bar {
       display: flex; justify-content: center; gap: 8px;
       margin-top: 20px;
@@ -613,6 +654,59 @@
       border-radius: 2px;
       width: 0%;
       transition: width .1s linear;
+    }
+
+    /* Mobile: hide 3-panel, show single classic carousel */
+    .carousel-wrapper-mobile {
+      display: none;
+    }
+    @media (max-width: 900px) {
+      .gallery-stage { display: none !important; }
+      .carousel-wrapper-mobile {
+        display: block;
+        margin-top: 40px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        height: 500px;
+        background: #0d1f1e;
+      }
+      .carousel-track-mobile {
+        display: flex;
+        width: 1900%;
+        height: 100%;
+        transition: transform .55s cubic-bezier(.4,0,.2,1);
+        will-change: transform;
+      }
+      .carousel-slide-mobile {
+        width: calc(100% / 19);
+        flex: 0 0 calc(100% / 19);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0d1f1e;
+      }
+      .carousel-slide-mobile img {
+        display: block;
+        height: 100%;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+      }
+      .carousel-btn-m {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        width: 40px; height: 40px; border-radius: 50%;
+        background: rgba(13,31,30,.75);
+        border: 1px solid rgba(255,255,255,.2);
+        color: #fff; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        z-index: 10;
+      }
+      .carousel-btn-m.prev { left: 10px; }
+      .carousel-btn-m.next { right: 10px; }
+      .carousel-btn-m svg { width: 18px; height: 18px; }
+      #galeri { padding: 60px 20px; }
     }
 
     /* ── VISI MISI ── */
@@ -999,23 +1093,77 @@
     <h2>Galeri Pekerjaan</h2>
     <p class="lead" style="margin:16px auto 0;">Dokumentasi nyata proyek waterproofing yang telah kami selesaikan di berbagai lokasi di Bali.</p>
   </div>
-  <div class="carousel-wrapper" style="margin-top:56px; max-width:1200px; margin-left:auto; margin-right:auto;">
-    <div class="carousel-track" id="galleryTrack">
-      <div class="carousel-slide-img"><img src="images/galeri-wahyu01.webp" alt="Galeri Wahyu Dewata Waterproofing 1" loading="lazy"></div>
-      <div class="carousel-slide-img"><img src="images/galeri-wahyu02.webp" alt="Galeri Wahyu Dewata Waterproofing 2" loading="lazy"></div>
-      <div class="carousel-slide-img"><img src="images/galeri-wahyu03.webp" alt="Galeri Wahyu Dewata Waterproofing 3" loading="lazy"></div>
-      <div class="carousel-slide-img"><img src="images/galeri-wahyu04.webp" alt="Galeri Wahyu Dewata Waterproofing 4" loading="lazy"></div>
-      <div class="carousel-slide-img"><img src="images/galeri-wahyu05.webp" alt="Galeri Wahyu Dewata Waterproofing 5" loading="lazy"></div>
-      <div class="carousel-slide-img"><img src="images/galeri-wahyu06.webp" alt="Galeri Wahyu Dewata Waterproofing 6" loading="lazy"></div>
-      <div class="carousel-slide-img"><img src="images/galeri-wahyu07.webp" alt="Galeri Wahyu Dewata Waterproofing 7" loading="lazy"></div>
+
+  <!-- DESKTOP: 3-panel stage -->
+  <div class="gallery-stage" id="galleryStage">
+    <!-- Prev side panel -->
+    <div class="gallery-side" id="gallerySidePrev" onclick="galleryNav(-1)">
+      <img id="gallerySidePrevImg" src="images/galeri-wahyu18.webp" alt="Slide sebelumnya">
     </div>
-    <button class="carousel-btn prev" id="galleryPrev" aria-label="Sebelumnya">
+    <!-- Main center panel -->
+    <div class="gallery-main">
+      <div class="gallery-main-track" id="galleryMainTrack">
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu01.webp" alt="Galeri 1"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu02.webp" alt="Galeri 2"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu03.webp" alt="Galeri 3"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu04.webp" alt="Galeri 4"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu05.webp" alt="Galeri 5"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu06.webp" alt="Galeri 6"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu07.webp" alt="Galeri 7"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu08.webp" alt="Galeri 8"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu09.webp" alt="Galeri 9"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu10.webp" alt="Galeri 10"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu11.webp" alt="Galeri 11"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu12.webp" alt="Galeri 12"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu13.webp" alt="Galeri 13"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu14.webp" alt="Galeri 14"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu15.webp" alt="Galeri 15"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu16.webp" alt="Galeri 16"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu17.webp" alt="Galeri 17"></div>
+        <div class="gallery-main-slide"><img src="images/galeri-wahyu18.webp" alt="Galeri 18"></div>
+        <!-- Clone of slide 01 for seamless infinite forward loop -->
+        <div class="gallery-main-slide clone-first"><img src="images/galeri-wahyu01.webp" alt="Galeri 1 clone"></div>
+      </div>
+    </div>
+    <!-- Next side panel -->
+    <div class="gallery-side" id="gallerySideNext" onclick="galleryNav(1)">
+      <img id="gallerySideNextImg" src="images/galeri-wahyu02.webp" alt="Slide berikutnya">
+    </div>
+  </div>
+
+  <!-- MOBILE: classic single-slide carousel -->
+  <div class="carousel-wrapper-mobile" id="galleryMobile">
+    <div class="carousel-track-mobile" id="galleryTrackMobile">
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu01.webp" alt="Galeri 1" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu02.webp" alt="Galeri 2" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu03.webp" alt="Galeri 3" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu04.webp" alt="Galeri 4" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu05.webp" alt="Galeri 5" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu06.webp" alt="Galeri 6" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu07.webp" alt="Galeri 7" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu08.webp" alt="Galeri 8" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu09.webp" alt="Galeri 9" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu10.webp" alt="Galeri 10" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu11.webp" alt="Galeri 11" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu12.webp" alt="Galeri 12" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu13.webp" alt="Galeri 13" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu14.webp" alt="Galeri 14" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu15.webp" alt="Galeri 15" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu16.webp" alt="Galeri 16" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu17.webp" alt="Galeri 17" loading="lazy"></div>
+      <div class="carousel-slide-mobile"><img src="images/galeri-wahyu18.webp" alt="Galeri 18" loading="lazy"></div>
+      <!-- Clone of slide 01 for seamless infinite forward loop -->
+      <div class="carousel-slide-mobile clone-first-m"><img src="images/galeri-wahyu01.webp" alt="Galeri 1 clone" loading="lazy"></div>
+    </div>
+    <button class="carousel-btn-m prev" id="galleryPrevM" aria-label="Sebelumnya">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <button class="carousel-btn next" id="galleryNext" aria-label="Berikutnya">
+    <button class="carousel-btn-m next" id="galleryNextM" aria-label="Berikutnya">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
   </div>
+
+  <!-- Dots & progress (shared) -->
   <div class="carousel-dots-bar" id="galleryDots" style="max-width:1200px; margin:20px auto 0;">
     <button class="carousel-dot active" data-idx="0"></button>
     <button class="carousel-dot" data-idx="1"></button>
@@ -1024,6 +1172,17 @@
     <button class="carousel-dot" data-idx="4"></button>
     <button class="carousel-dot" data-idx="5"></button>
     <button class="carousel-dot" data-idx="6"></button>
+    <button class="carousel-dot" data-idx="7"></button>
+    <button class="carousel-dot" data-idx="8"></button>
+    <button class="carousel-dot" data-idx="9"></button>
+    <button class="carousel-dot" data-idx="10"></button>
+    <button class="carousel-dot" data-idx="11"></button>
+    <button class="carousel-dot" data-idx="12"></button>
+    <button class="carousel-dot" data-idx="13"></button>
+    <button class="carousel-dot" data-idx="14"></button>
+    <button class="carousel-dot" data-idx="15"></button>
+    <button class="carousel-dot" data-idx="16"></button>
+    <button class="carousel-dot" data-idx="17"></button>
   </div>
   <div class="carousel-progress" style="margin-top:12px;">
     <div class="carousel-progress-bar" id="galleryProgress"></div>
@@ -1361,64 +1520,181 @@
 
   // ── GALLERY CAROUSEL ──
   (function() {
-    const track = document.getElementById('galleryTrack');
-    const dots = document.querySelectorAll('#galleryDots .carousel-dot');
-    const progressBar = document.getElementById('galleryProgress');
-    const total = 7;
+    const TOTAL = 18;          // real slides
+    const SLIDE_COUNT = 19;    // real + 1 clone of slide-01 at end
+    const INTERVAL = 4000;
+    const ANIM_DUR = 550;
+    const images = Array.from({length: TOTAL}, (_, i) => `images/galeri-wahyu${String(i+1).padStart(2,'0')}.webp`);
+
     let current = 0;
     let autoTimer = null;
-    let progressTimer = null;
-    let progressVal = 0;
-    const INTERVAL = 4000;
-    const PROGRESS_STEP = 50;
+    let isTransitioning = false;
 
-    function goTo(idx) {
-      current = (idx + total) % total;
-      track.style.transform = `translateX(-${current * 100}%)`;
-      dots.forEach((d, i) => d.classList.toggle('active', i === current));
-      progressVal = 0;
-      progressBar.style.transition = 'none';
-      progressBar.style.width = '0%';
+    // ── Shared dots & progress ──
+    const dots = document.querySelectorAll('#galleryDots .carousel-dot');
+    const progressBar = document.getElementById('galleryProgress');
+
+    function updateDots(idx) {
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
     }
-
     function startProgress() {
-      clearInterval(progressTimer);
-      progressVal = 0;
       progressBar.style.transition = 'none';
       progressBar.style.width = '0%';
-      setTimeout(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
         progressBar.style.transition = `width ${INTERVAL}ms linear`;
         progressBar.style.width = '100%';
-      }, 30);
+      }));
     }
+
+    // ── DESKTOP main track ──
+    const mainContainer = document.querySelector('.gallery-main');
+    const mainTrack     = document.getElementById('galleryMainTrack');
+    const sidePrevImg   = document.getElementById('gallerySidePrevImg');
+    const sideNextImg   = document.getElementById('gallerySideNextImg');
+
+    function getSlideWidth() {
+      return mainContainer ? mainContainer.offsetWidth : 0;
+    }
+
+    function desktopSetPos(slideIdx, animated) {
+      const px = slideIdx * getSlideWidth();
+      mainTrack.style.transition = animated
+        ? `transform ${ANIM_DUR}ms cubic-bezier(.4,0,.2,1)`
+        : 'none';
+      mainTrack.style.transform = `translateX(-${px}px)`;
+    }
+
+    function desktopUpdateSides(logicalIdx) {
+      const prevIdx = ((logicalIdx - 1) + TOTAL) % TOTAL;
+      const nextIdx = (logicalIdx + 1) % TOTAL;
+      sidePrevImg.src = images[prevIdx];
+      sideNextImg.src = images[nextIdx];
+    }
+
+    function desktopGoTo(idx) {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      current = idx;
+      desktopSetPos(idx, true);
+      desktopUpdateSides(idx);
+      updateDots(idx);
+      setTimeout(() => { isTransitioning = false; }, ANIM_DUR + 60);
+    }
+
+    function desktopAdvance() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+
+      if (current === TOTAL - 1) {
+        // animate to clone (position TOTAL = index 18)
+        desktopSetPos(TOTAL, true);
+        desktopUpdateSides(0);
+        updateDots(0);
+        setTimeout(() => {
+          desktopSetPos(0, false);  // silent jump to real slide 01
+          current = 0;
+          isTransitioning = false;
+        }, ANIM_DUR + 60);
+      } else {
+        current++;
+        desktopSetPos(current, true);
+        desktopUpdateSides(current);
+        updateDots(current);
+        setTimeout(() => { isTransitioning = false; }, ANIM_DUR + 60);
+      }
+    }
+
+    function desktopPrev() {
+      if (isTransitioning) return;
+      const prev = ((current - 1) + TOTAL) % TOTAL;
+      desktopGoTo(prev);
+    }
+
+    // ── MOBILE track ──
+    const mobileWrapper = document.getElementById('galleryMobile');
+    const mobileTrack = document.getElementById('galleryTrackMobile');
+    let mobileCurrent = 0;
+
+    function getMobileSlideWidth() {
+      return mobileWrapper ? mobileWrapper.offsetWidth : 0;
+    }
+
+    function mobileSetPos(pos, animated) {
+      const px = pos * getMobileSlideWidth();
+      mobileTrack.style.transition = animated
+        ? `transform ${ANIM_DUR}ms cubic-bezier(.4,0,.2,1)`
+        : 'none';
+      mobileTrack.style.transform = `translateX(-${px}px)`;
+    }
+    function mobileGoTo(idx) {
+      mobileCurrent = idx;
+      mobileSetPos(idx, true);
+      updateDots(idx);
+    }
+    function mobileAdvance() {
+      if (mobileCurrent === TOTAL - 1) {
+        mobileSetPos(TOTAL, true);
+        updateDots(0);
+        setTimeout(() => { mobileSetPos(0, false); mobileCurrent = 0; }, ANIM_DUR + 60);
+      } else {
+        mobileCurrent++;
+        mobileSetPos(mobileCurrent, true);
+        updateDots(mobileCurrent);
+      }
+    }
+    function mobilePrev() {
+      const prev = ((mobileCurrent - 1) + TOTAL) % TOTAL;
+      mobileCurrent = prev;
+      mobileSetPos(prev, true);
+      updateDots(prev);
+    }
+
+    // ── Navigation ──
+    function navNext() { desktopAdvance(); mobileAdvance(); startAuto(); }
+    function navPrev() { desktopPrev();    mobilePrev();    startAuto(); }
+    function navDot(idx) {
+      if (isTransitioning) return;
+      desktopGoTo(idx); mobileGoTo(idx); startAuto();
+    }
+
+    window.galleryNav = function(dir) { dir > 0 ? navNext() : navPrev(); };
 
     function startAuto() {
       clearInterval(autoTimer);
       startProgress();
       autoTimer = setInterval(() => {
-        goTo(current + 1);
-        startProgress();
+        desktopAdvance(); mobileAdvance(); startProgress();
       }, INTERVAL);
     }
 
-    document.getElementById('galleryNext').addEventListener('click', () => {
-      goTo(current + 1); startAuto();
-    });
-    document.getElementById('galleryPrev').addEventListener('click', () => {
-      goTo(current - 1); startAuto();
-    });
-    dots.forEach(d => {
-      d.addEventListener('click', () => { goTo(+d.dataset.idx); startAuto(); });
-    });
+    // Mobile buttons
+    document.getElementById('galleryPrevM').addEventListener('click', navPrev);
+    document.getElementById('galleryNextM').addEventListener('click', navNext);
 
-    // Touch/swipe support
+    // Dots
+    dots.forEach(d => d.addEventListener('click', () => navDot(+d.dataset.idx)));
+
+    // Touch swipe
     let touchStartX = 0;
-    track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    track.addEventListener('touchend', e => {
-      const diff = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 40) { goTo(current + (diff > 0 ? 1 : -1)); startAuto(); }
+    [mobileTrack, mainTrack].forEach(el => {
+      el.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+      el.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) diff > 0 ? navNext() : navPrev();
+      });
     });
 
+    // Re-calc on resize
+    window.addEventListener('resize', () => {
+      desktopSetPos(current, false);
+      mobileSetPos(mobileCurrent, false);
+    });
+
+    // Init
+    desktopSetPos(0, false);
+    desktopUpdateSides(0);
+    updateDots(0);
+    mobileSetPos(0, false);
     startAuto();
   })();
 </script>
